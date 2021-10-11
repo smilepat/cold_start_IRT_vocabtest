@@ -1,0 +1,32 @@
+@font-face {
+	font-family: JalnanOTF;
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.introNavText {
+	position: relative;
+	top: 3.5rem;
+	width: 40rem;
+	height: 3.4rem;
+	font-family: JalnanOTF;
+	font-size: 3.4rem;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	margin-left: 43%;
+	letter-spacing: -0.075rem;
+	text-align: left;
+	color: #ffffff;
+}
+.introBodyText {
+	position: relative;
+	top: 7rem;
+	font-family: NotoSansCJKkr, sans-serif;
+	font-size: 2.6rem;
+	font-weight: 600;
+	text-align: center;
+	color: white;
+}

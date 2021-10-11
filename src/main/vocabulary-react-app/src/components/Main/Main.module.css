@@ -1,0 +1,215 @@
+@font-face {
+	font-style: normal;
+	font-weight: normal;
+	font-family: JalnanOTF;
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff')
+		format('woff');
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
+
+.mainWrapper {
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+}
+.navWrapper {
+	width: 100%;
+	height: 12rem;
+	background-color: #68c8c7;
+	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+	border-bottom: 3px solid rgba(0, 0, 0, 0.16);
+}
+.navText {
+	position: relative;
+	top: 3.5rem;
+	width: 40rem;
+	height: 3.4rem;
+	color: #ffffff;
+	margin-left: 43%;
+	text-align: left;
+	font-size: 3.4rem;
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-family: JalnanOTF;
+	letter-spacing: -0.075rem;
+}
+
+.quitBtn {
+	top: 1.5rem;
+	right: 100px;
+	display: flex;
+	cursor: pointer;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+}
+.nextBtn {
+	left: 436px;
+	bottom: 125px;
+	cursor: pointer;
+	position: relative;
+}
+.bodyWrapper {
+	width: 100%;
+	height: 52rem;
+	background-color: #68c8c7;
+}
+.mainBodyContent {
+	z-index: 1;
+	top: 4.5rem;
+	left: 29rem;
+	width: 107rem;
+	height: 68.7rem;
+	position: relative;
+	border-radius: 1.6rem;
+	background-color: #f9faff;
+	transform: translate(15%, -5%);
+	box-shadow: 0.4rem 0.3rem 1.2rem 0 rgba(24, 93, 88, 0.3);
+}
+.progressBar {
+	top: 5rem;
+	left: 25rem;
+	width: 30rem;
+	height: 1.5rem;
+	border-radius: 8px;
+	margin: 0 0 48.1px;
+	position: relative;
+	padding: 0 511px 0 0;
+	background-color: rgba(136, 136, 136, 0.2);
+}
+.bodyWhite {
+	height: 1rem;
+	background-color: red;
+}
+.voca {
+	display: flex;
+	height: 16rem;
+	margin-top: 80px;
+	text-align: left;
+	color: #003939;
+	font-size: 110px;
+	font-weight: bold;
+	font-style: normal;
+	align-items: center;
+	font-stretch: normal;
+	justify-content: center;
+	font-family: Montserrat;
+	letter-spacing: normal;
+}
+.mainContentText {
+	top: 60px;
+	height: 36px;
+	width: 80rem;
+	font-size: 26px;
+	color: #8e8e8e;
+	text-align: left;
+	font-style: normal;
+	margin-left: 28rem;
+	position: relative;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: normal;
+	font-family: 'Noto Sans', sans-serif;
+}
+.inputAnswer {
+	width: 330px;
+	height: 60px;
+	color: #242424;
+	outline-width: 0;
+	margin-top: 9rem;
+	margin-left: 20px;
+	font-size: 2.5rem;
+	font-weight: bold;
+	line-height: 1.38;
+	font-style: normal;
+	text-align: center;
+	border-radius: 10px;
+	object-fit: contain;
+	font-stretch: normal;
+	letter-spacing: normal;
+	background-color: #fcffff;
+	padding: 31px 64px 31px 71px;
+	font-family: 'Noto Sans', sans-serif;
+	border-color: rgba(24, 93, 88, 0.3);
+	box-shadow: 1px 1px 8px 0 rgba(72, 255, 242, 0.6);
+}
+.inputAnswer1 {
+	width: 330px;
+	height: 60px;
+	outline-width: 0;
+	color: #242424;
+	margin-top: 9rem;
+	margin-left: 20px;
+	font-size: 2.5rem;
+	font-weight: bold;
+	line-height: 1.38;
+	font-style: normal;
+	text-align: center;
+	border-radius: 10px;
+	object-fit: contain;
+	font-stretch: normal;
+	letter-spacing: normal;
+	background-color: #fcffff;
+	padding: 31px 64px 31px 71px;
+	font-family: 'Noto Sans', sans-serif;
+	border-color: rgba(24, 93, 88, 0.3);
+}
+.skipBtn {
+	cursor: pointer;
+	margin-top: 6px;
+	margin-left: 750px;
+	position: relative;
+	transform: translate(5rem, -3rem);
+}
+
+.mainBodyText {
+	top: 13rem;
+	font-size: 3rem;
+	color: #43adac;
+	font-style: normal;
+	line-height: 1.38;
+	text-align: center;
+	position: relative;
+	font-weight: bolder;
+	font-stretch: normal;
+	letter-spacing: normal;
+	font-family: 'Noto Sans', sans-serif;
+}
+.footer {
+	width: 100%;
+	height: 10rem;
+	bottom: 54.8rem;
+	position: relative;
+	background-color: #68c8c7;
+}
+.modalImgWrapper {
+	display: flex;
+	margin-top: -5rem;
+	align-items: center;
+	justify-content: center;
+}
+.modalWrapper {
+	top: -1rem;
+	width: 14rem;
+	height: 5rem;
+	display: flex;
+	margin-left: 80%;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+}
+.exampleSentence {
+	top: 20px;
+	font-size: 22px;
+	color: #8e8e8e;
+	position: relative;
+	font-weight: normal;
+	font-stretch: normal;
+	font-family: 'Noto Sans', sans-serif;
+}
+.chart {
+	left: -7rem;
+	position: relative;
+}

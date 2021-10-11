@@ -1,0 +1,19 @@
+.barChart {
+	position: relative;
+	background: rgb(13, 25, 64);
+	background: linear-gradient(
+		0deg,
+		rgba(13, 25, 64, 1) 0%,
+		rgba(27, 77, 62, 1) 69%,
+		rgba(69, 44, 99, 1) 100%
+	);
+	left: 61.3%;
+	bottom: 130%;
+	border-radius: 16px;
+}
+.barChart > canvas {
+	height: 300px;
+}
+.chartjs-render-monitor {
+	height: 300px;
+}

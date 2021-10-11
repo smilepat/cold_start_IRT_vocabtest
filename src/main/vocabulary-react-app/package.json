@@ -1,0 +1,51 @@
+{
+	"name": "vocabulary-react-app",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@material-ui/core": "^4.11.3",
+		"@material-ui/icons": "^4.11.2",
+		"@reactchartjs/react-chart.js": "^1.0.0-rc.3",
+		"@reduxjs/toolkit": "^1.5.1",
+		"@testing-library/jest-dom": "^5.11.10",
+		"@testing-library/react": "^11.2.5",
+		"@testing-library/user-event": "^12.8.3",
+		"axios": "^0.21.1",
+		"chart.js": "^2.7.1",
+		"d3-scale-chromatic": "^2.0.0",
+		"react": "^17.0.2",
+		"react-chartjs-2": "^2.7.0",
+		"react-dom": "^17.0.2",
+		"react-reveal": "^1.2.2",
+		"react-router-dom": "^5.2.0",
+		"react-scripts": "4.0.3",
+		"recharts": "^2.0.9",
+		"styled-components": "^5.2.3",
+		"web-vitals": "^1.1.1"
+	},
+	"proxy": "http://192.168.0.21:8083/",
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "BUILD_PATH='../resources/views' react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

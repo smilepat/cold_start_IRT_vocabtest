@@ -1,0 +1,19 @@
+.steps {
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	left: 40rem;
+	justify-content: space-around;
+	width: 130rem;
+	align-items: center;
+	padding-top: 25px;
+	transform: translate(15%, -5%);
+	justify-content: space-evenly;
+}
+.step {
+	border: 2px solid white;
+	padding: 20px 60px;
+	border-radius: 10px;
+	color: white;
+	font-size: 25px;
+}

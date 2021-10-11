@@ -1,0 +1,143 @@
+@font-face {
+	font-family: JalnanOTF;
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.navText {
+	position: relative;
+	top: 3.5rem;
+	width: 60rem;
+	height: 3.4rem;
+	font-family: JalnanOTF;
+	font-size: 3.4rem;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	margin-left: 41%;
+	letter-spacing: -0.075rem;
+	text-align: left;
+	color: #ffffff;
+}
+.bubbleText {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 7rem;
+	font-size: 3rem;
+	font-weight: bold;
+	font-family: NotoSansCJKkr, sans-serif;
+	color: #68c8c7;
+}
+.loadMapBubble1 {
+	margin-top: 3rem;
+	margin-left: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24rem;
+	height: 4rem;
+	object-fit: contain;
+	border-radius: 0.8rem;
+	background-color: #43adac;
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: bold;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.loadMapBubble2 {
+	margin-top: 1rem;
+	margin-left: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24rem;
+	height: 4rem;
+	object-fit: contain;
+	border-radius: 0.8rem;
+	background-color: rgba(67, 173, 172, 0.9);
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: bold;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.loadMapBubble3 {
+	margin-top: 1rem;
+	margin-left: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24rem;
+	height: 4rem;
+	object-fit: contain;
+	border-radius: 0.8rem;
+	background-color: rgba(67, 173, 172, 0.8);
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: bold;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.loadMapBubble4 {
+	margin-top: 1rem;
+	margin-left: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24rem;
+	height: 4rem;
+	object-fit: contain;
+	border-radius: 0.8rem;
+	background-color: rgba(67, 173, 172, 0.7);
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: bold;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.loadMapBubble5 {
+	margin-top: 1rem;
+	margin-left: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24rem;
+	height: 4rem;
+	object-fit: contain;
+	border-radius: 0.8rem;
+	background-color: rgba(67, 173, 172, 0.6);
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: bold;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.loadMapBubble6 {
+	margin-top: 1rem;
+	margin-left: 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24rem;
+	height: 4rem;
+	object-fit: contain;
+	border-radius: 0.8rem;
+	background-color: rgba(67, 173, 172, 0.5);
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: bold;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.context2 {
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: 600;
+	font-size: 2rem;
+	color: #43adac;
+}
+.context3 {
+	font-family: NotoSansCJKkr, sans-serif;
+	font-weight: 500;
+	margin-top: -1rem;
+	font-size: 2rem;
+	color: #43adac;
+}
