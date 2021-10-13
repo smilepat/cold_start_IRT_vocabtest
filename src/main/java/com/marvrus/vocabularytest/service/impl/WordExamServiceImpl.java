@@ -11,17 +11,25 @@ import com.marvrus.vocabularytest.repository.WordExamRepository;
 import com.marvrus.vocabularytest.repository.WordRepository;
 import com.marvrus.vocabularytest.service.WordExamService;
 import com.marvrus.vocabularytest.utils.LocalDateTimeZoneUtil;
+import com.marvrus.vocabularytest.utils.Utils;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class WordExamServiceImpl implements WordExamService {
+
+	private static Logger logger = LoggerFactory.getLogger(WordExamServiceImpl.class);
+
     private static final int DETAIL_SECTION_BOTTOM = 1;
     private static final int DETAIL_SECTION_MIDDEL = 45;
     private static final int DETAIL_SECTION_TOP = 90;
@@ -49,7 +57,15 @@ public class WordExamServiceImpl implements WordExamService {
         WordExamDetail wordExamDetail = new WordExamDetail();
         wordExamDetail.setWordExamSeqno(wordExam.getWordExamSeqno());
         wordExamDetail.setExamOrder(1);
-        List<Word> wordList = wordRepository.findAllByDetailSection(DETAIL_SECTION_MIDDEL);
+
+        int start_level = (int) Math.ceil((float)wordRepository.getMaxLevel() / 2);
+        List<Word> wordList = wordRepository.findAllByLevel(start_level);
+        //List<Word> wordList = wordRepository.findAllByDetailSection(DETAIL_SECTION_MIDDEL);
+
+        logger.error("===================================");
+        logger.error("Start Level : " + start_level);
+        logger.error("===================================");
+
         wordExamDetail.setWordSeqno(wordList.get(RandomUtils.nextInt(0, wordList.size())).getWordSeqno());
         wordExamDetailRepository.save(wordExamDetail);
 
@@ -142,7 +158,17 @@ public class WordExamServiceImpl implements WordExamService {
         wordExamDetail.setWord(targetWord);
         wordExamDetails.add(wordExamDetail);
 
-        boolean isExamEnd = getNextDetailSection(wordExamDetails) == targetWord.getDetailSection();
+        //boolean isExamEnd = getNextDetailSection(wordExamDetails) == targetWord.getDetailSection();
+
+        /*
+         *  Exam end logic is not determined yet
+         *  For now it will be hardcoded
+         *  Should be changed later
+         */
+        boolean isExamEnd = false;
+        if (getNextLevel(wordExamDetails) <= 0 || getNextLevel(wordExamDetails) >= 182) {
+        	isExamEnd = true;
+        }
 
         if (!isExamEnd) {
             Word nextWord = getNextWord(wordExamDetails);
@@ -162,7 +188,8 @@ public class WordExamServiceImpl implements WordExamService {
     }
 
     private Word getNextWord(List<WordExamDetail> wordExamDetails) {
-        List<Word> wordList = wordRepository.findAllByDetailSection(getNextDetailSection(wordExamDetails));
+        //List<Word> wordList = wordRepository.findAllByDetailSection(getNextDetailSection(wordExamDetails));
+    	List<Word> wordList = wordRepository.findAllByLevel(getNextLevel(wordExamDetails));
         Word nextWord = wordList.get(RandomUtils.nextInt(0, wordList.size()));
 
         for (WordExamDetail beforeExam : wordExamDetails) {
@@ -176,6 +203,8 @@ public class WordExamServiceImpl implements WordExamService {
         return nextWord;
     }
 
+
+    // Is this method ever called ?
     @Override
     public WordExam examDone(Long wordExamSeqno) {
         if (Objects.isNull(wordExamSeqno) || wordExamSeqno == 0) {
@@ -202,9 +231,11 @@ public class WordExamServiceImpl implements WordExamService {
             }
 
             if (isTestDone) {
-                int nextDetailSection = getNextDetailSection(wordExamDetailList);
-                wordExam.setExamDetailSection(nextDetailSection);
-                wordExam.setExamLevel((nextDetailSection - 1) / 10 + 1);
+                // Uncommented because we won't use getNextDetailSection method any longer
+
+            	//int nextDetailSection = getNextDetailSection(wordExamDetailList);
+                //wordExam.setExamDetailSection(nextDetailSection);
+                //wordExam.setExamLevel((nextDetailSection - 1) / 10 + 1);
             }
         }
 
@@ -214,6 +245,7 @@ public class WordExamServiceImpl implements WordExamService {
         return wordExamRepository.save(wordExam);
     }
 
+    /*
     private int getNextDetailSection(List<WordExamDetail> wordExamDetails) {
         double highest = DETAIL_SECTION_TOP;
         double lowest = DETAIL_SECTION_BOTTOM;
@@ -227,6 +259,114 @@ public class WordExamServiceImpl implements WordExamService {
         }
 
         return (int) Math.round((lowest + highest) / 2);
+    }
+    */
+
+    private int getNextLevel(List<WordExamDetail> wordExamDetails) {
+    	/* getNextWord - Logic Part
+    	 * If at the current level there are 3 true from 5 questions,
+    	 * next word is fetched from higher level
+    	 * If at the current level there are 3 false from 5 questions,
+    	 * next word is fetched from lower level
+    	 *
+    	 * Additional rules :
+    	 * If from 3 question user already got 2 true, can go to next level
+    	 */
+
+		logger.error("===================================");
+
+		int currLevel = wordExamDetails.get(wordExamDetails.size() - 1).getWord().getLevel(); // For return value
+		final int level = currLevel; // For filter use, should be final
+
+		// LastN using 6 because the last index is duplicated in the list
+		// Will fetch last 6 of the same level only
+		List<WordExamDetail> lastFive = wordExamDetails.stream().collect(Utils.lastN(6));
+		// Remove the duplicated list member, so now the member will be 5
+		lastFive.remove(lastFive.size() - 1);
+		// Filter for same level only
+		lastFive = lastFive.stream().filter(obj -> level == obj.getWord().getLevel()).collect(Collectors.toList());
+
+		// Another filter in case member are same level but not in the right order
+		int index = 0;
+		int overlappingIndex = -1;
+		int lastExamOrder = 0;
+		for ( WordExamDetail elem : lastFive ) {
+			if (index == 0)
+				lastExamOrder = elem.getExamOrder();
+			else {
+				//logger.error("Element : " + elem.getExamOrder());
+				//logger.error("Element : " + (lastExamOrder + 1));
+
+				if (elem.getExamOrder() != (lastExamOrder + 1))
+					overlappingIndex = index;
+
+				lastExamOrder = elem.getExamOrder();
+			}
+
+			index++;
+		}
+		// Unordered list detected
+		// We only take the latest list with same level with correct order
+		if (overlappingIndex != -1) {
+			lastFive = wordExamDetails.stream().collect(Utils.lastN(lastFive.size() - overlappingIndex));
+		}
+
+		int correctCount = 0; // Counting correct results
+		for ( WordExamDetail elem : lastFive ) {
+			logger.error("Element : " + elem.getExamOrder());
+			logger.error("Element : " + elem.getWord().getWord());
+			logger.error("Element : " + elem.getWord().getLevel());
+			logger.error("Element : " + elem.getCorrectYn());
+
+			if (elem.getCorrectYn() == YesNo.Y) {
+				correctCount++;
+            }
+		}
+
+		logger.error("Correct Count : " + correctCount + "/" + lastFive.size());
+		logger.error("===================================");
+
+		// Check if at least 2 correct from 3 questions
+		if (lastFive.size() == 3) {
+
+			// Increase level if 2/3
+			if (correctCount >= 2) {
+				currLevel++;
+				logger.error("Increase Level : " + currLevel);
+			}
+			// Decrease level if 0/3
+			else if (correctCount == 0) {
+				currLevel--;
+				logger.error("Decrease Level : " + currLevel);
+			}
+			else {
+				logger.error("Same Level : " + currLevel);
+			}
+
+		} else if (lastFive.size() == 4) {
+			// Decrease level if 1/4
+			if (correctCount == 1) {
+				currLevel--;
+				logger.error("Decrease Level : " + currLevel);
+			}
+		} else {
+			// Check if at least 3 correct from 5 questions
+			if (lastFive.size() == 5) {
+
+				if (correctCount >= 3) {
+					currLevel++;
+					logger.error("Increase Level : " + currLevel);
+				} else {
+					currLevel--;
+					logger.error("Decrease Level : " + currLevel);
+				}
+
+			} else {
+				logger.error("Same Level : " + currLevel);
+			}
+		}
+
+		return currLevel;
     }
 
     @Override
