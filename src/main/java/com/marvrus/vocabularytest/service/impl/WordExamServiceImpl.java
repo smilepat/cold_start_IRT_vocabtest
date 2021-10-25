@@ -38,6 +38,26 @@ public class WordExamServiceImpl implements WordExamService {
     private final WordExamRepository wordExamRepository;
     private final WordExamDetailRepository wordExamDetailRepository;
 
+    private final int window = 50;
+
+    final class SeqRange {
+        private final Long low;
+        private final Long high;
+
+        public SeqRange(Long low, Long high) {
+            this.low = low;
+            this.high = high;
+        }
+
+        public Long getLowLimit() {
+            return low;
+        }
+
+        public Long getHighLimit() {
+            return high;
+        }
+    }
+
     @Autowired
     public WordExamServiceImpl(WordRepository wordRepository, WordExamRepository wordExamRepository,
                                WordExamDetailRepository wordExamDetailRepository) {
@@ -58,18 +78,58 @@ public class WordExamServiceImpl implements WordExamService {
         wordExamDetail.setWordExamSeqno(wordExam.getWordExamSeqno());
         wordExamDetail.setExamOrder(1);
 
-        int start_level = (int) Math.ceil((float)wordRepository.getMaxLevel() / 2);
-        List<Word> wordList = wordRepository.findAllByLevel(start_level);
-        //List<Word> wordList = wordRepository.findAllByDetailSection(DETAIL_SECTION_MIDDEL);
+        // Get words count
+        Long words_qty = wordRepository.getMaxWordSeqno();
+        if (words_qty > 0) {
+        	wordExamDetail.setWordSeqnoLowLimit(1L);
+        	wordExamDetail.setWordSeqnoHighLimit(words_qty);
+        }
 
-        logger.error("===================================");
-        logger.error("Start Level : " + start_level);
-        logger.error("===================================");
+        SeqRange seqLimit = getRangeSeqno(wordExamDetail.getWordSeqnoLowLimit(), wordExamDetail.getWordSeqnoHighLimit());
+        List<Word> wordList = wordRepository.findByWordSeqnoBetween(seqLimit.getLowLimit(), seqLimit.getHighLimit());
+        //int start_level = (int) Math.ceil((float)wordRepository.getMaxLevel() / 2);
+        //List<Word> wordList = wordRepository.findAllByLevel(start_level);
+
+        //List<Word> wordList = wordRepository.findAllByDetailSection(DETAIL_SECTION_MIDDEL);
 
         wordExamDetail.setWordSeqno(wordList.get(RandomUtils.nextInt(0, wordList.size())).getWordSeqno());
         wordExamDetailRepository.save(wordExamDetail);
 
+        logger.error("===================================");
+        logger.error("Exam Number : " + wordExamDetail.getWordExamSeqno());
+        logger.error("Exam Question Index : " + wordExamDetail.getWordSeqno());
+        logger.error("Word Index Range : " + wordExamDetail.getWordSeqnoLowLimit() + " - " + wordExamDetail.getWordSeqnoHighLimit());
+        logger.error("Chosen word between index : " + seqLimit.getLowLimit() + " - " + seqLimit.getHighLimit());
+        logger.error("Words Count : " + wordList.size());
+        logger.error("===================================");
+
         return wordExam;
+    }
+
+    private SeqRange getRangeSeqno(Long low_idx, Long high_idx) {
+    	Long low_limit = 0L;
+    	Long hi_limit = 0L;
+
+    	Long range = (high_idx - low_idx) + 1;
+
+        if (range <= window)
+        	return new SeqRange(low_idx, high_idx);
+        else {
+        	// If even then get 50 words
+			if (range % 2 == 0) {
+			    float mid_value = (float) (high_idx + low_idx) / 2;
+			    low_limit = (long) (Math.floor(mid_value) - ((window /2) - 1));
+			    hi_limit =  (long) (Math.ceil(mid_value) + ((window /2) - 1));
+			}
+			// If odd then get 51 words
+			else {
+				Long mid_value = (high_idx + low_idx) / 2;
+				low_limit = mid_value - (window /2);
+				hi_limit = mid_value + (window /2);
+			}
+
+        	return new SeqRange(low_limit, hi_limit);
+        }
     }
 
     @Override
@@ -160,13 +220,9 @@ public class WordExamServiceImpl implements WordExamService {
 
         //boolean isExamEnd = getNextDetailSection(wordExamDetails) == targetWord.getDetailSection();
 
-        /*
-         *  Exam end logic is not determined yet
-         *  For now it will be hardcoded
-         *  Should be changed later
-         */
         boolean isExamEnd = false;
-        if (getNextLevel(wordExamDetails) <= 0 || getNextLevel(wordExamDetails) >= 182) {
+        SeqRange seqRange = getNextRange(wordExamDetails);
+        if ((seqRange.getHighLimit() - seqRange.getLowLimit()) <= window) {
         	isExamEnd = true;
         }
 
@@ -179,7 +235,17 @@ public class WordExamServiceImpl implements WordExamService {
                 nextWordExam.setWordExamSeqno(wordExam.getWordExamSeqno());
                 nextWordExam.setExamOrder(examOrder + 1);
                 nextWordExam.setWordSeqno(nextWord.getWordSeqno());
+                nextWordExam.setWordSeqnoLowLimit(seqRange.getLowLimit());
+            	nextWordExam.setWordSeqnoHighLimit(seqRange.getHighLimit());
+
                 wordExamDetailRepository.save(nextWordExam);
+
+                logger.error("===================================");
+	            logger.error("Exam Number : " + nextWordExam.getWordExamSeqno());
+	            logger.error("Exam Question Index : " + nextWordExam.getWordSeqno());
+	            logger.error("Next Word Index Range : " + nextWordExam.getWordSeqnoLowLimit() + " - " + nextWordExam.getWordSeqnoHighLimit());
+	            logger.error("===================================");
+
             }
         }
 
@@ -189,7 +255,16 @@ public class WordExamServiceImpl implements WordExamService {
 
     private Word getNextWord(List<WordExamDetail> wordExamDetails) {
         //List<Word> wordList = wordRepository.findAllByDetailSection(getNextDetailSection(wordExamDetails));
-    	List<Word> wordList = wordRepository.findAllByLevel(getNextLevel(wordExamDetails));
+    	//List<Word> wordList = wordRepository.findAllByLevel(getNextLevel(wordExamDetails));
+    	SeqRange seqRange = getNextRange(wordExamDetails);
+    	SeqRange seqWindow = getRangeSeqno(seqRange.getLowLimit(), seqRange.getHighLimit());
+        List<Word> wordList = wordRepository.findByWordSeqnoBetween(seqWindow.getLowLimit(), seqWindow.getHighLimit());
+
+        logger.error("===================================");
+        logger.error("Chosen next word between index : " + seqWindow.getLowLimit() + " - " + seqWindow.getHighLimit());
+        logger.error("Words Count : " + wordList.size());
+        logger.error("===================================");
+
         Word nextWord = wordList.get(RandomUtils.nextInt(0, wordList.size()));
 
         for (WordExamDetail beforeExam : wordExamDetails) {
@@ -262,7 +337,7 @@ public class WordExamServiceImpl implements WordExamService {
     }
     */
 
-    private int getNextLevel(List<WordExamDetail> wordExamDetails) {
+    //private int getNextLevel(List<WordExamDetail> wordExamDetails) {
     	/* getNextWord - Logic Part
     	 * If at the current level there are 3 true from 5 questions,
     	 * next word is fetched from higher level
@@ -273,6 +348,7 @@ public class WordExamServiceImpl implements WordExamService {
     	 * If from 3 question user already got 2 true, can go to next level
     	 */
 
+    /*
 		logger.error("===================================");
 
 		int currLevel = wordExamDetails.get(wordExamDetails.size() - 1).getWord().getLevel(); // For return value
@@ -367,6 +443,28 @@ public class WordExamServiceImpl implements WordExamService {
 		}
 
 		return currLevel;
+    }
+    */
+
+    private SeqRange getNextRange(List<WordExamDetail> wordExamDetails) {
+    	WordExamDetail latestExam = wordExamDetails.get(wordExamDetails.size() - 1);
+    	Long latest_low = latestExam.getWordSeqnoLowLimit();
+    	Long latest_hi = latestExam.getWordSeqnoHighLimit();
+
+    	Long sum = latest_low + latest_hi;
+
+    	Long new_low = 0L;
+    	Long new_hi = 0L;
+
+    	if (latestExam.getCorrectYn() == YesNo.Y) {
+    		new_hi = latest_hi;
+    		new_low = (long) Math.ceil((float) sum / 2);
+    	} else {
+    		new_low = latest_low;
+    		new_hi = (long) Math.floor((float) sum / 2);
+    	}
+
+    	return new SeqRange(new_low, new_hi);
     }
 
     @Override

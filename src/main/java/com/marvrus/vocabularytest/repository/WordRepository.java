@@ -11,9 +11,13 @@ import java.util.List;
 public interface WordRepository extends JpaRepository<Word, Long> {
     List<Word> findAllByDetailSection(int detailSectionMiddel);
     List<Word> findAllByLevel(int level);
+    List<Word> findByWordSeqnoBetween(Long low_idx, Long hi_idx);
 
     Word findByWord(String word);
 
     @Query(value = "SELECT max(level) FROM Word")
     int getMaxLevel();
+
+    @Query(value = "SELECT max(wordSeqno) FROM Word")
+    Long getMaxWordSeqno();
 }

@@ -27,6 +27,12 @@ public class WordExamDetail {
     @Column(name = "word_seqno")
     private Long wordSeqno;
 
+    @Column(name = "word_seqno_low_limit")
+    private Long wordSeqnoLowLimit;
+
+    @Column(name = "word_seqno_high_limit")
+    private Long wordSeqnoHighLimit;
+
     @Column(name = "answer")
     private String answer;
 
@@ -73,6 +79,22 @@ public class WordExamDetail {
 
     public void setWordSeqno(Long wordSeqno) {
         this.wordSeqno = wordSeqno;
+    }
+
+    public Long getWordSeqnoLowLimit() {
+        return wordSeqnoLowLimit;
+    }
+
+    public void setWordSeqnoLowLimit(Long wordSeqnoLowLimit) {
+        this.wordSeqnoLowLimit = wordSeqnoLowLimit;
+    }
+
+    public Long getWordSeqnoHighLimit() {
+        return wordSeqnoHighLimit;
+    }
+
+    public void setWordSeqnoHighLimit(Long wordSeqnoHighLimit) {
+        this.wordSeqnoHighLimit = wordSeqnoHighLimit;
     }
 
     public String getAnswer() {
