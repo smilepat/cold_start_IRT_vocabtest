@@ -13,6 +13,7 @@ import com.marvrus.vocabularytest.service.WordExamService;
 import com.marvrus.vocabularytest.utils.LocalDateTimeZoneUtil;
 import com.marvrus.vocabularytest.utils.Utils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -447,6 +448,15 @@ public class WordExamServiceImpl implements WordExamService {
     */
 
     private SeqRange getNextRange(List<WordExamDetail> wordExamDetails) {
+    	/* getNextRange - Logic Part
+    	 * If at the current level there are 3 true from 5 questions,
+    	 * next word is fetched from higher level
+    	 * If at the current level there are 3 false from 5 questions,
+    	 * next word is fetched from lower level
+    	 *
+    	 * Additional rules :
+    	 * If from 3 question user already got 2 true, can go to next level
+    	 */
     	WordExamDetail latestExam = wordExamDetails.get(wordExamDetails.size() - 1);
     	Long latest_low = latestExam.getWordSeqnoLowLimit();
     	Long latest_hi = latestExam.getWordSeqnoHighLimit();
@@ -456,12 +466,98 @@ public class WordExamServiceImpl implements WordExamService {
     	Long new_low = 0L;
     	Long new_hi = 0L;
 
-    	if (latestExam.getCorrectYn() == YesNo.Y) {
+		logger.error("===================================");
+
+		// Get current limit
+		Long currLowLimit = wordExamDetails.get(wordExamDetails.size() - 1).getWordSeqnoLowLimit();
+		Long currHighLimit = wordExamDetails.get(wordExamDetails.size() - 1).getWordSeqnoHighLimit();
+
+		// LastN using 6 because the last index is duplicated in the list
+		// Will fetch last 6 of the same range only
+		List<WordExamDetail> lastFive = wordExamDetails.stream().collect(Utils.lastN(6));
+		// Remove the duplicated list member, so now the member will be 5
+		lastFive.remove(lastFive.size() - 1);
+		// Filter for same range only
+		lastFive = lastFive.stream()
+				.filter(obj -> currLowLimit.equals(obj.getWordSeqnoLowLimit()) && currHighLimit.equals(obj.getWordSeqnoHighLimit()))
+				.collect(Collectors.toList());
+
+		int correctCount = 0; // Counting correct results
+		for ( WordExamDetail elem : lastFive ) {
+			logger.error("Order Index : " + elem.getExamOrder());
+			logger.error("Words : " + elem.getWord().getWord());
+			logger.error("Correct : " + elem.getCorrectYn());
+			logger.error("Low Limit : " + elem.getWordSeqnoLowLimit());
+			logger.error("High Limit : " + elem.getWordSeqnoHighLimit());
+
+			if (elem.getCorrectYn() == YesNo.Y) {
+				correctCount++;
+            }
+		}
+
+		logger.error("Correct Count : " + correctCount + "/" + lastFive.size());
+		logger.error("===================================");
+
+		boolean incDifficulty = false;
+		boolean decDifficulty = false;
+		// Check if at least 2 correct from 3 questions
+		if (lastFive.size() == 3) {
+
+			// Increase level if 2/3
+			if (correctCount >= 2) {
+				incDifficulty = true;
+				logger.error("Increase Difficulty");
+			}
+			// Decrease level if 0/3
+			else if (correctCount == 0) {
+				decDifficulty = true;
+				logger.error("Decrease Difficulty");
+			}
+			else {
+				logger.error("Same Difficulty");
+			}
+
+		} else if (lastFive.size() == 4) {
+			// Decrease level if 1/4
+			if (correctCount == 1) {
+				decDifficulty = true;
+				logger.error("Decrease Difficulty");
+			}
+		} else {
+			// Check if at least 3 correct from 5 questions
+			if (lastFive.size() == 5) {
+
+				if (correctCount >= 3) {
+					incDifficulty = true;
+					logger.error("Increase Difficulty");
+				} else {
+					decDifficulty = true;
+					logger.error("Decrease Difficulty");
+				}
+
+			} else {
+				logger.error("Same Difficulty");
+			}
+		}
+
+    	if (incDifficulty && !decDifficulty) {
     		new_hi = latest_hi;
     		new_low = (long) Math.ceil((float) sum / 2);
-    	} else {
+    	}
+    	else if (!incDifficulty && decDifficulty) {
     		new_low = latest_low;
     		new_hi = (long) Math.floor((float) sum / 2);
+    	}
+    	else if (!incDifficulty && !decDifficulty) {
+    		new_hi = latest_hi;
+    		new_low = latest_low;
+    	} else {
+    		new_hi = latest_hi;
+    		new_low = latest_low;
+
+    		logger.error("================================================");
+    		logger.error("Check getNextRange method, should not reach here");
+    		logger.error("================================================");
     	}
 
     	return new SeqRange(new_low, new_hi);
