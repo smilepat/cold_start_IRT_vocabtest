@@ -42,7 +42,7 @@ function QuitModal({open, onClickQuit, handleClose}) {
 							id='transition-modal-title'
 							className={classes.h2Text}
 						>
-							테스트를 종료할까요?
+							테스트를 종료할까요????
 						</h2>
 						<Jump>
 							<div className={classes.modalImgWrapper}>

@@ -23,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,8 @@ public class WordExamServiceImpl implements WordExamService {
 	private static Logger logger = LoggerFactory.getLogger(WordExamServiceImpl.class);
 
     private static final int DETAIL_SECTION_BOTTOM = 1;
-    private static final int DETAIL_SECTION_MIDDEL = 45;
-    private static final int DETAIL_SECTION_TOP = 90;
+    private static final int DETAIL_SECTION_MIDDEL = 4500;
+    private static final int DETAIL_SECTION_TOP = 9000;
 
     private final WordRepository wordRepository;
     private final WordExamRepository wordExamRepository;
@@ -78,15 +80,19 @@ public class WordExamServiceImpl implements WordExamService {
         WordExamDetail wordExamDetail = new WordExamDetail();
         wordExamDetail.setWordExamSeqno(wordExam.getWordExamSeqno());
         wordExamDetail.setExamOrder(1);
-
         // Get words count
+
         Long words_qty = wordRepository.getMaxWordSeqno();
+        logger.error("generateWordExam============words_qty" + words_qty);
         if (words_qty > 0) {
         	wordExamDetail.setWordSeqnoLowLimit(1L);
         	wordExamDetail.setWordSeqnoHighLimit(words_qty);
         }
 
         SeqRange seqLimit = getRangeSeqno(wordExamDetail.getWordSeqnoLowLimit(), wordExamDetail.getWordSeqnoHighLimit());
+
+        logger.error("============seqLimit.getLowLimit()" + seqLimit.getLowLimit());
+        logger.error("============seqLimit.getHighLimit()" + seqLimit.getHighLimit());
         List<Word> wordList = wordRepository.findByWordSeqnoBetween(seqLimit.getLowLimit(), seqLimit.getHighLimit());
         //int start_level = (int) Math.ceil((float)wordRepository.getMaxLevel() / 2);
         //List<Word> wordList = wordRepository.findAllByLevel(start_level);
@@ -113,20 +119,30 @@ public class WordExamServiceImpl implements WordExamService {
 
     	Long range = (high_idx - low_idx) + 1;
 
+    	logger.error("james high_idx  " + high_idx.toString() + " low_idx  " + low_idx.toString());
+
         if (range <= window)
         	return new SeqRange(low_idx, high_idx);
         else {
         	// If even then get 50 words
 			if (range % 2 == 0) {
 			    float mid_value = (float) (high_idx + low_idx) / 2;
-			    low_limit = (long) (Math.floor(mid_value) - ((window /2) - 1));
-			    hi_limit =  (long) (Math.ceil(mid_value) + ((window /2) - 1));
+
+			    //james
+			    //low_limit = (long) (Math.floor(mid_value) - ((window /2) - 1));
+			    low_limit = (long) (Math.floor(mid_value) - ((window /2)));
+
+			    //james changed math.ceil to math.floor
+			    // hi_limit =  (long) (Math.floor(mid_value) + ((window /2) - 1));
+			    hi_limit =  (long) (Math.floor(mid_value) + ((window /2)));
 			}
 			// If odd then get 51 words
 			else {
 				Long mid_value = (high_idx + low_idx) / 2;
-				low_limit = mid_value - (window /2);
-				hi_limit = mid_value + (window /2);
+
+				 //james add math.floor
+				low_limit = (long) Math.floor(mid_value) - (window /2);
+				hi_limit =  (long) Math.floor(mid_value) + (window /2);
 			}
 
         	return new SeqRange(low_limit, hi_limit);
@@ -136,26 +152,31 @@ public class WordExamServiceImpl implements WordExamService {
     @Override
     public Word getExamWord(Long wordExamSeqno, Integer examOrder) {
         if (Objects.isNull(wordExamSeqno) || wordExamSeqno == 0) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.1");
         }
 
         if (Objects.isNull(examOrder) || examOrder < 1) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.2");
         }
 
         Optional<WordExam> wordExamResult = wordExamRepository.findById(wordExamSeqno);
         if (!wordExamResult.isPresent()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.3");
         }
 
         if (wordExamResult.get().getExamDoneYn() == YesNo.Y) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "이미 종료된 테스트입니다.");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "이미 종료된 테스트입니다.4");
         }
-
+       //james error
+        logger.error("james error wordExamSeqno1  " + wordExamSeqno.toString() + " examOrder  " + examOrder.toString());
         WordExamDetail wordExamDetail = wordExamDetailRepository
                 .findByWordExamSeqnoAndExamOrder(wordExamSeqno, examOrder);
+        logger.error("james error wordExamSeqno2  " + wordExamSeqno.toString() + " examOrder  " + examOrder.toString());
+
+
+        logger.error("james error wordExamSeqno  " + wordExamSeqno.toString() + " examOrder  " + examOrder.toString());
         if (Objects.isNull(wordExamDetail)) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.5");
         }
 
         return wordExamDetail.getWord();
@@ -178,7 +199,9 @@ public class WordExamServiceImpl implements WordExamService {
         WordExam wordExam = wordExamResult.get();
 
         List<WordExamDetail> wordExamDetails = wordExam.getWordExamDetails();
-
+        logger.error("james===wordExamSeqno" + wordExamSeqno.toString());
+        logger.error("james===examOrder" + examOrder.toString());
+        logger.error("james===wordExamDetails.size()" + wordExamDetails.size());
         if (examOrder != wordExamDetails.size()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
         }
@@ -193,7 +216,7 @@ public class WordExamServiceImpl implements WordExamService {
         if (Objects.isNull(wordExamDetail)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
         }
-
+        logger.error("james===wordExamDetail.getWord()" + wordExamDetail.getWord().getWord() + "james===wordExamAnswerForm.getWord()" + wordExamAnswerForm.getWord());
         if (!StringUtils.equals(wordExamDetail.getWord().getWord(), wordExamAnswerForm.getWord())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
         }
@@ -301,6 +324,7 @@ public class WordExamServiceImpl implements WordExamService {
         }
 
         int correctCnt = 0;
+        logger.error("==============wordExamDetailList*****" + wordExamDetailList.toString());
         for (WordExamDetail wordExamDetail : wordExamDetailList) {
             if (wordExamDetail.getCorrectYn() == YesNo.Y) {
                 correctCnt++;
@@ -312,6 +336,10 @@ public class WordExamServiceImpl implements WordExamService {
             	//int nextDetailSection = getNextDetailSection(wordExamDetailList);
                 //wordExam.setExamDetailSection(nextDetailSection);
                 //wordExam.setExamLevel((nextDetailSection - 1) / 10 + 1);
+            	logger.error("==============wordExamDetailList*****" + wordExamDetailList.toString());
+            	int nextDetailSection = getNextDetailSection(wordExamDetailList);
+                wordExam.setExamDetailSection(nextDetailSection);
+                wordExam.setExamLevel((nextDetailSection - 1) / 10 + 1);
             }
         }
 
@@ -321,7 +349,7 @@ public class WordExamServiceImpl implements WordExamService {
         return wordExamRepository.save(wordExam);
     }
 
-    /*
+
     private int getNextDetailSection(List<WordExamDetail> wordExamDetails) {
         double highest = DETAIL_SECTION_TOP;
         double lowest = DETAIL_SECTION_BOTTOM;
@@ -334,9 +362,9 @@ public class WordExamServiceImpl implements WordExamService {
             }
         }
 
-        return (int) Math.round((lowest + highest) / 2);
+        return (int) Math.floor((lowest + highest) / 2);
     }
-    */
+
 
     //private int getNextLevel(List<WordExamDetail> wordExamDetails) {
     	/* getNextWord - Logic Part
@@ -461,16 +489,20 @@ public class WordExamServiceImpl implements WordExamService {
     	Long latest_low = latestExam.getWordSeqnoLowLimit();
     	Long latest_hi = latestExam.getWordSeqnoHighLimit();
 
+    	logger.error("james latest_low" + latest_low.toString() + "james latest_hi" + latest_hi.toString());
+
     	Long sum = latest_low + latest_hi;
+
+    	logger.error("james sum" + sum.toString());
 
     	Long new_low = 0L;
     	Long new_hi = 0L;
 
-		logger.error("===================================");
-
 		// Get current limit
 		Long currLowLimit = wordExamDetails.get(wordExamDetails.size() - 1).getWordSeqnoLowLimit();
 		Long currHighLimit = wordExamDetails.get(wordExamDetails.size() - 1).getWordSeqnoHighLimit();
+
+		logger.error("james currLowLimit" + currLowLimit.toString() + "james currHighLimit" + currHighLimit.toString());
 
 		// LastN using 6 because the last index is duplicated in the list
 		// Will fetch last 6 of the same range only
@@ -504,7 +536,7 @@ public class WordExamServiceImpl implements WordExamService {
 		if (lastFive.size() == 3) {
 
 			// Increase level if 2/3
-			if (correctCount >= 2) {
+			if (correctCount >= 3) {
 				incDifficulty = true;
 				logger.error("Increase Difficulty");
 			}
@@ -570,6 +602,7 @@ public class WordExamServiceImpl implements WordExamService {
         }
 
         Optional<WordExam> wordExamResult = wordExamRepository.findById(wordExamSeqno);
+        logger.error("james=====wordExamResult.isPresent()" + wordExamResult.isPresent());
         if (!wordExamResult.isPresent()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
         }

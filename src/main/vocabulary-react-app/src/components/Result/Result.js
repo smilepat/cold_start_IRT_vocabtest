@@ -85,7 +85,9 @@ function Result({history, seqNo}) {
 		const res = async () => {
 			try {
 				let response = await axios.post(`/api/word-exams/${seqNo}`);
+				alert(`/api/word-exams/${seqNo}`);
 				let level = response.data.data.examLevel;
+				alert(response.data.data.examLevel);
 				setLevel(level);
 				console.log('level', level);
 			} catch (error) {
