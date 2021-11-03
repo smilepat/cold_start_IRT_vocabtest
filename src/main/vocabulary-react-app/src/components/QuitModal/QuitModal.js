@@ -77,6 +77,7 @@ function QuitModal({open, onClickQuit, handleClose}) {
 								onClick={() => {
 									handleClose();
 									history.push('/');
+									history.go(0)
 									setDoneButton('clicked');
 								}}
 							/>
