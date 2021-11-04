@@ -85,9 +85,9 @@ function Result({history, seqNo}) {
 		const res = async () => {
 			try {
 				let response = await axios.post(`/api/word-exams/${seqNo}`);
-				alert(`/api/word-exams/${seqNo}`);
+				//alert(`/api/word-exams/${seqNo}`);
 				let level = response.data.data.examLevel;
-				alert(response.data.data.examLevel);
+				//alert(response.data.data.examLevel);
 				setLevel(level);
 				console.log('level', level);
 			} catch (error) {
@@ -96,9 +96,9 @@ function Result({history, seqNo}) {
 		};
 		res();
 	}, []);
-
-	levelStr = `${(level - 1) * 1000} ~ ${level * 1000}개`;
-
+	//james 단위 수정 곱하기 1000에서 10으로
+	//levelStr = `${(level - 1) * 1000} ~ ${level * 1000}개`;
+	levelStr = `${(level - 1) * 10} ~ ${level * 10}개`;
 	return (
 		<div className={classes.resultWrapper}>
 			<div className={classes.navWrapper}>
