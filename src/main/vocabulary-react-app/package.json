@@ -23,10 +23,10 @@
 		"styled-components": "^5.2.3",
 		"web-vitals": "^1.1.1"
 	},
-	"proxy": "http://172.30.1.40:8081/",
+	"proxy": "http://127.0.0.1:8080/",
 	"scripts": {
 		"start": "react-scripts start",
-		"build": "BUILD_PATH='../resources/views' react-scripts build",
+		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},

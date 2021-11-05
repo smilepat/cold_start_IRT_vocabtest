@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/word-exams")
 public class WordExamApiController {
@@ -25,6 +26,11 @@ public class WordExamApiController {
     @ApiOperation(value = "어휘력테스트 시작 요청", notes = "어휘력 테스트 시작요청")
     public WordExam generateWordExam() {
         return wordExamService.generateWordExam();
+    }
+
+    @GetMapping("/status")
+    public String getStatus() {
+    	return "Server is Running";
     }
 
     @GetMapping("/{wordExamSeqno}/orders/{examOrder}")

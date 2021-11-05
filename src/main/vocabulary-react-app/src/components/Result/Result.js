@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import axios from "axios/axios"
 import MobileStepper from '@material-ui/core/MobileStepper';
 import {withRouter} from 'react-router-dom';
 import Steps from 'components/Steps/Steps';

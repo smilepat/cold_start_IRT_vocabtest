@@ -33,6 +33,7 @@ class WordExamServiceImplTest {
 
     @Test
     public void test() throws Exception {
+    	/*
         File file = FileUtils.getFile("/Users/marvrus/Documents", "sample.xlsx");
         FileInputStream fileInputStream = new FileInputStream(file);
         XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
@@ -73,6 +74,7 @@ class WordExamServiceImplTest {
         }
 
         wordRepository.saveAll(wordList);
+        */
     }
 
 }

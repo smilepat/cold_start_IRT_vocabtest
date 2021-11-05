@@ -11,6 +11,7 @@
     <groupId>com.marvrus</groupId>
     <artifactId>vocabulary-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>vocabulary-test</name>
     <description>Vocabulary test</description>
     <properties>
@@ -185,9 +186,15 @@
             <version>4.1.2</version>
         </dependency>
         <!-- MS OFFICE FILE PARSER -->
+        <dependency>
+		   <groupId>org.springframework.boot</groupId>
+		   <artifactId>spring-boot-starter-tomcat</artifactId>
+		   <scope>provided</scope>
+		</dependency>
     </dependencies>
 
     <build>
+    	<finalName>Marvlus</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -199,6 +206,7 @@
                 <directory>src/main/resources-${environment}</directory>
             </resource>
         </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -242,9 +250,19 @@
                             <arguments>run-script build</arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
+
     </build>
 
 </project>

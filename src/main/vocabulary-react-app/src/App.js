@@ -6,7 +6,7 @@ import Intro from './components/Intro/Intro';
 import Main from './components/Main/Main';
 import Error from './components/Error/Error';
 import Result from './components/Result/Result';
-import axios from 'axios';
+import axios from "axios/axios"
 
 function App() {
 	const [seqNo, setSeqNo] = useState(0);
