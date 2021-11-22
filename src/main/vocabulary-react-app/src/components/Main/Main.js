@@ -72,6 +72,7 @@ const Main = ({
 				if (counter === 1) {
 					steps.current = level;
 				}
+
 				setLevel(level);
 				setExampleSentence(sentence);
 				setQuestion(word);

@@ -7,6 +7,12 @@ const LineChart = ({examResult, level}) => {
 	const answers = examResult.map((result) => {
 		return result.correctYn;
 	});
+	const lowLimits = examResult.map((result) => {
+		return result.wordSeqnoLowLimit;
+	});
+	const highLimits = examResult.map((result) => {
+		return result.wordSeqnoHighLimit;
+	});
 	const graphData = [
 		{
 			name: '',
@@ -14,23 +20,45 @@ const LineChart = ({examResult, level}) => {
 		},
 	];
 
+	//console.log("Chart")
+	let lastMedian = 0
 	answers.forEach((answer, index) => {
+		let median = Math.floor( (highLimits[index] + lowLimits[index]) / 2 );
+		//console.log("Index: " + index)
+		//console.log("Median: " + median)
+
 		let order =
 			index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th';
+
+		if (answer != null) {
+			if (lastMedian != median) {
+				graphData.push({
+					name: `${index + 1}${order}`,
+					uv: median,
+				});
+
+				lastMedian = median
+			}
+		}
+		/*
 		if (answer === 'Y') {
 			graphData.push({
 				name: `${index + 1}${order}`,
 				uv: level,
 			});
+			//console.log("True: " + answer + " - " + level)
 		} else {
 			graphData.push({
 				name: `${index + 1}${order}`,
 				uv: -level,
 			});
+			//console.log("Wrong: " + answer + " - " + level)
 		}
+		*/
 	});
 
-	let x = level <= 4 ? 4 : 8;
+	//let x = level <= 4 ? 4 : 8;
+	let x = level;
 	return (
 		<AreaChart
 			className={styles.barChart}
@@ -61,7 +89,7 @@ const LineChart = ({examResult, level}) => {
 				</linearGradient>
 			</defs>
 			<Area
-				type='basis'
+				type='monotone'
 				dataKey='uv'
 				stroke='#A9E3F8'
 				strokeWidth={4}
