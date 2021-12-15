@@ -77,7 +77,8 @@ const LineChart = ({examResult, level}) => {
 			<YAxis
 				tick={{fontSize: 16, fill: '#3C9C9B'}}
 				type='number'
-				domain={[(-x: x)]}
+				domain={[(0: 9000)]}
+				tickCount={100}
 				dataKey='uv'
 			/>
 			<Tooltip />

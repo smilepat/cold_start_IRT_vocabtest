@@ -156,6 +156,21 @@
 	font-family: 'Noto Sans', sans-serif;
 	border-color: rgba(24, 93, 88, 0.3);
 }
+
+.radioAnswerBox {
+	margin-top: 5rem;
+	font-size: 2.5rem;
+}
+
+.radioAnswerText {
+	padding-left: 15px;
+}
+
+input[type=radio] {
+    width: 20px;
+    height: 20px;
+}
+
 .skipBtn {
 	cursor: pointer;
 	margin-top: 6px;

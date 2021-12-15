@@ -37,6 +37,12 @@ const Main = ({
 	const [inputAnswer, setInputAnswer] = useState('');
 	const [question, setQuestion] = useState('');
 	const [level, setLevel] = useState(0);
+	const [answerOption1, setAnswerOption1] = useState('');
+	const [answerOption2, setAnswerOption2] = useState('');
+	const [answerOption3, setAnswerOption3] = useState('');
+	const [answerOption4, setAnswerOption4] = useState('');
+	const [answerOption5, setAnswerOption5] = useState('');
+	const [answerOptionId, setAnswerOptionId] = useState('');
 	const [skipped, setSkipped] = React.useState(new Set());
 	const [toggleVisibility, setToggleVisibility] = useState(false);
 	const [toggleShadow, setToggleShadow] = useState(false);
@@ -67,15 +73,31 @@ const Main = ({
 					word,
 					level,
 					exampleSentence: sentence,
+					korean: opt1,
+					option1: opt2,
+					option2: opt3,
+					option3: opt4,
+					unknown: opt5
 				} = response.data.data;
-				setQuestion(word);
+
 				if (counter === 1) {
 					steps.current = level;
 				}
 
+				// Re-shuffle option, so next time it won't be on same order
+				const opts = [opt1, opt2, opt3, opt4];
+				opts.sort(() => 0.5 - Math.random());
+
+				setAnswerOption1(opts.pop())
+				setAnswerOption2(opts.pop())
+				setAnswerOption3(opts.pop())
+				setAnswerOption4(opts.pop())
+				setAnswerOption5(opt5)
+
 				setLevel(level);
 				setExampleSentence(sentence);
 				setQuestion(word);
+				setAnswerOptionId('');
 				inputRef.current.focus();
 			} catch (error) {
 				console.error(error);
@@ -154,6 +176,18 @@ const Main = ({
 			? setToggleShadow(true)
 			: setToggleShadow(false);
 	};
+
+	const answerHandler = (e) => {
+		setAnswerOptionId(e.target.id);
+		setInputAnswer(e.target.value);
+		setInputLength(e.target.value.length);
+		if (counter === 1) {
+			e.target.value.length >= 1
+				? setToggleVisibility(true)
+				: setToggleVisibility(false);
+		}
+	};
+
 	let getSteps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	return (
@@ -216,22 +250,57 @@ const Main = ({
 					<Grid className={styles.exampleSentence}>
 						{exampleSentence}
 					</Grid>
+
 					<Grid className={styles.inputWrapper}>
-						<input
-							value={inputAnswer}
-							ref={inputRef}
-							onChange={inputHandler}
-							className={
-								toggleShadow === true
-									? `${styles.inputAnswer}`
-									: `${styles.inputAnswer1}`
-							}
-							disabled={done === true}
-							type='text'
-							placeholder='한글 뜻을 입력해주세요.'
-							autoFocus
-						/>
-					</Grid>
+						<div className={styles.radioAnswerBox}>
+						    <div className="radio">
+					          <label>
+					            <input id="answerOptionId1" name="answerRadio" type="radio"
+					            	value={answerOption1}
+					            	checked={answerOptionId === "answerOptionId1"}
+					            	onChange={answerHandler}/>
+					            <label className={styles.radioAnswerText}>{answerOption1}</label>
+					          </label>
+					        </div>
+						    <div className="radio">
+					          <label>
+					            <input id="answerOptionId2" name="answerRadio" type="radio"
+					            	value={answerOption2}
+					            	checked={answerOptionId === "answerOptionId2"}
+					            	onChange={answerHandler}/>
+					            <label className={styles.radioAnswerText}>{answerOption2}</label>
+					          </label>
+					        </div>
+					        <div className="radio">
+					          <label>
+					            <input id="answerOptionId3" name="answerRadio" type="radio"
+					            	value={answerOption3}
+					            	checked={answerOptionId === "answerOptionId3"}
+					            	onChange={answerHandler}/>
+					            <label className={styles.radioAnswerText}>{answerOption3}</label>
+					          </label>
+					        </div>
+					        <div className="radio">
+					          <label>
+					            <input id="answerOptionId4" name="answerRadio" type="radio"
+					            	value={answerOption4}
+					            	checked={answerOptionId === "answerOptionId4"}
+					            	onChange={answerHandler}/>
+					            <label className={styles.radioAnswerText}>{answerOption4}</label>
+					          </label>
+					        </div>
+					        <div className="radio">
+					          <label>
+					            <input id="answerOptionId5" name="answerRadio" type="radio"
+					            	value={answerOption5}
+					            	checked={answerOptionId === "answerOptionId5"}
+					            	onChange={answerHandler}/>
+					            <label className={styles.radioAnswerText}>{answerOption5}</label>
+					          </label>
+					        </div>
+				        </div>
+				    </Grid>
+
 					{toggleVisibility === true ? (
 						<img
 							src={

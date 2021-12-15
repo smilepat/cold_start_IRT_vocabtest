@@ -224,16 +224,30 @@ public class WordExamServiceImpl implements WordExamService {
         wordExamDetail.setCreateDt(LocalDateTimeZoneUtil.getNow());
         wordExamDetail.setAnswer(wordExamAnswerForm.getAnswer());
 
-        String[] meanings = StringUtils.split(targetWord.getMeaning(), ",");
+        // This is used when answer is text input
+        //String[] meanings = StringUtils.split(targetWord.getMeaning(), ",");
+        // This is used when answer is multiple choice
+        String meaning = targetWord.getAnswer();
+
+        logger.error("Got Answer " + wordExamAnswerForm.getAnswer());
 
         YesNo correctYn = YesNo.N;
+
+        // This is used when answer is text input, where meaning can be have multiple answer
+        /*
         for (String meaning : meanings) {
             if (StringUtils.equals(StringUtils.deleteWhitespace(meaning),
                     StringUtils.deleteWhitespace(wordExamAnswerForm.getAnswer()))) {
                 correctYn = YesNo.Y;
                 break;
             }
+        }*/
+        // This is used when answer is multiple choice, and only has single answer
+        if (StringUtils.equals(StringUtils.deleteWhitespace(meaning),
+                StringUtils.deleteWhitespace(wordExamAnswerForm.getAnswer()))) {
+            correctYn = YesNo.Y;
         }
+
         wordExamDetail.setCorrectYn(correctYn);
         wordExamDetailRepository.save(wordExamDetail);
 
