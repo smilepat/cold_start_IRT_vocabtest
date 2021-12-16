@@ -160,10 +160,13 @@
 .radioAnswerBox {
 	margin-top: 5rem;
 	font-size: 2.5rem;
+	padding-left: 200px;
+	text-align: left;
 }
 
 .radioAnswerText {
 	padding-left: 15px;
+	text-align: left;
 }
 
 input[type=radio] {

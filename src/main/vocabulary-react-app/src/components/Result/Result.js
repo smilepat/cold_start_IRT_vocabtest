@@ -42,41 +42,51 @@ function Result({history, seqNo}) {
 	const [level, setLevel] = useState(0);
 	const [retryButtonType, setRetryButtonType] = useState('default');
 	const [studyButtonType, setStudyButtonType] = useState('default');
+
 	let levelStr = '';
+	let level1 = Math.floor(level / 100);
 	const classes = useStyles();
 
-	const levelNth = function (level) {
-		if (level > 3) return 'th';
-		switch (level % 10) {
+	const levelNth = function (level1) {
+		switch (level1) {
 			case 1:
 				return 'st';
 			case 2:
 				return 'nd';
 			case 3:
 				return 'rd';
+			case 4:
+				return 'th';
+			case 5:
+				return 'th';
+			case 6:
+				return 'th';
+			case 7:
+				return 'th';
+			case 8:
+				return 'th';
 			default:
 				return 'th';
 		}
 	};
-
-	const levelToText = (level) => {
-		return level === 0
+	const levelToText = (level1) => {
+		return level1 === 0
 			? '초등 기본'
-			: level === 1
+			: level1 === 1
 			? '초등 완성'
-			: level === 2
+			: level1 === 2
 			? '중등 기본'
-			: level === 3
+			: level1 === 3
 			? '중등 발전'
-			: level === 4
+			: level1 === 4
 			? '중등 완성'
-			: level === 5
+			: level1 === 5
 			? '고등 기본'
-			: level === 6
+			: level1 === 6
 			? '고등 발전'
-			: level === 7
+			: level1 === 7
 			? '수능 완성'
-			: level === 8
+			: level1 === 8
 			? 'voca master'
 			: 'voca master';
 	};
@@ -87,9 +97,8 @@ function Result({history, seqNo}) {
 				let response = await axios.post(`/api/word-exams/${seqNo}`);
 				//alert(`/api/word-exams/${seqNo}`);
 				let level = response.data.data.examLevel;
-				//alert(response.data.data.examLevel);
 				setLevel(level);
-				console.log('level', level);
+				console.log('level', level1);
 			} catch (error) {
 				console.log(error.response);
 			}
@@ -98,7 +107,10 @@ function Result({history, seqNo}) {
 	}, []);
 	//james 단위 수정 곱하기 1000에서 10으로
 	//levelStr = `${(level - 1) * 1000} ~ ${level * 1000}개`;
-	levelStr = `${(level - 1) * 10} ~ ${level * 10}개`;
+	//levelStr = `${(level - 1) * 10} ~ ${level * 10}개`;
+
+	levelStr = `${(level * 10) - 10} ~ ${(level * 10)}개`;
+
 	return (
 		<div className={classes.resultWrapper}>
 			<div className={classes.navWrapper}>
@@ -117,25 +129,25 @@ function Result({history, seqNo}) {
 							<div className={styles.bubbleText}>{levelStr}</div>
 							<img
 								src={
-									level === 0
+									level1 === 0
 										? bubble1
-										: level === 1
+										: level1 === 1
 										? bubble2
-										: level === 2
+										: level1 === 2
 										? bubble3
-										: level === 3
+										: level1 === 3
 										? bubble4
-										: level === 4
+										: level1 === 4
 										? bubble5
-										: level === 5
+										: level1 === 5
 										? bubble6
-										: level === 6
+										: level1 === 6
 										? bubble7
-										: level === 7
+										: level1 === 7
 										? bubble8
-										: level === 8
+										: level1 === 8
 										? bubble9
-										: level === 9
+										: level1 === 9
 										? bubble10
 										: bubble10
 								}
@@ -148,7 +160,7 @@ function Result({history, seqNo}) {
 								variant='progress'
 								steps={10}
 								position='static'
-								activeStep={level}
+								activeStep={level1}
 								className={classes.resultProgressBar}
 							/>
 						</div>
@@ -176,28 +188,28 @@ function Result({history, seqNo}) {
 							className={classes.cefrBtn}
 						/>
 						<div className={classes.card2ContentText}>
-							{levelToText(level)}에 해당하는 어휘력을 갖고
+							{levelToText(level1)}에 해당하는 어휘력을 갖고
 							있어요.
 						</div>
 						<img
 							src={
-								level === 0
+								level1 === 0
 									? graphLv1
-									: level === 1
+									: level1 === 1
 									? graphLv2
-									: level === 2
+									: level1 === 2
 									? graphLv3
-									: level === 3
+									: level1 === 3
 									? graphLv4
-									: level === 4
+									: level1 === 4
 									? graphLv5
-									: level === 5
+									: level1 === 5
 									? graphLv6
-									: level === 6
+									: level1 === 6
 									? graphLv7
-									: level === 7
+									: level1 === 7
 									? graphLv8
-									: level === 8
+									: level1 === 8
 									? graphLv9
 									: graphLv9
 							}
@@ -260,8 +272,8 @@ function Result({history, seqNo}) {
 					<div className={classes.resultBodyText}>
 						<span className={classes.context1}>　Suggestion　</span>
 						<p className={styles.context2}>
-							{level}
-							{levelNth(level)} 1000 Level의 어휘를 마스터하세요!
+							{level1}
+							{levelNth(level1)} Level의 어휘를 마스터하세요!
 						</p>
 						<p className={styles.context3}>
 							권장기간 : 3개월, 1일 10단어

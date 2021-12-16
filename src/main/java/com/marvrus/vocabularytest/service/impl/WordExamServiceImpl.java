@@ -354,6 +354,7 @@ public class WordExamServiceImpl implements WordExamService {
             	int nextDetailSection = getNextDetailSection(wordExamDetailList);
                 wordExam.setExamDetailSection(nextDetailSection);
                 wordExam.setExamLevel((nextDetailSection - 1) / 10 + 1);
+                logger.error("==============setExamLevel*****" + (nextDetailSection - 1) / 10 + 1);
             }
         }
 
@@ -375,7 +376,7 @@ public class WordExamServiceImpl implements WordExamService {
                 highest = wordExamDetail.getWord().getDetailSection();
             }
         }
-
+        logger.error("===highest*****" + highest + "===lowest*****" +  lowest);
         return (int) Math.floor((lowest + highest) / 2);
     }
 
