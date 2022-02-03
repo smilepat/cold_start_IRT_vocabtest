@@ -2,6 +2,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
 	introWrapper: {
+		margin: '0px auto',
 		width: '100%',
 		height: '100%',
 		backgroundColor: '#ffffff',
@@ -29,6 +30,18 @@ export default makeStyles((theme) => ({
 		backgroundColor: '#f9faff',
 		transform: 'translate(15%, -5%)',
 	},
+	introBodyContentMobile: {
+		margin: '20px auto',
+		marginTop: '80px',
+		left: '31.2rem',
+		top: '15.7rem',
+		width: '60%',
+		height: '130%',
+		borderRadius: '15rem',
+		boxShadow: '0.4rem 0.3rem 1.2rem 0 rgba(24, 93, 88, 0.3)',
+		backgroundColor: '#000000',
+		transform: 'translate(0%, 0%)',
+	},	
 	introImg: {
 		position: 'relative',
 		top: '12rem',

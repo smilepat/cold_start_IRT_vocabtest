@@ -6,9 +6,9 @@ import {withRouter} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
 import styles from './Main.module.css';
-
 import Steps from 'components/Steps/Steps';
 import FinishModal from '../FinishModal/FinishModal';
+import InputModal from '../FinishModal/InputModal';
 import ExitModal from 'components/QuitModal/QuitModal';
 import LineChart from 'components/LineChart/LineChart';
 import ProgressContainer from 'components/ProgressNew/ProgressNew';
@@ -23,11 +23,14 @@ const Main = ({
 	history,
 	seqNo,
 	open1,
+	input1,
 	open,
 	onClickQuit,
 	onClickFinish,
+	onClickInput,
 	handleClose,
 	handleClose1,
+	handleInput,
 }) => {
 	const [activeStep, setActiveStep] = React.useState(0);
 	const [counter, setCounter] = useState(1);
@@ -48,6 +51,7 @@ const Main = ({
 	const [toggleShadow, setToggleShadow] = useState(false);
 	const [inputLength, setInputLength] = useState(0);
 	const [nextBtn, setNextbtn] = useState('default');
+	const [input, setInput] = useState(false);
 
 	const isStepSkipped = (step) => {
 		return skipped.has(step);
@@ -55,7 +59,12 @@ const Main = ({
 
 	let steps = useRef(null);
 	const inputRef = useRef();
-
+	useEffect(() => {
+		if (input === true) {
+			onClickInput();
+			setInput(false);
+		}
+	}, [input]);
 	useEffect(() => {
 		if (done === true) {
 			onClickFinish();
@@ -93,7 +102,7 @@ const Main = ({
 				setAnswerOption3(opts.pop())
 				setAnswerOption4(opts.pop())
 				setAnswerOption5(opt5)
-
+				
 				setLevel(level);
 				setExampleSentence(sentence);
 				setQuestion(word);
@@ -104,7 +113,7 @@ const Main = ({
 			}
 		};
 		res();
-	}, [counter]);
+	}, [done, seqNo, counter]);
 
 	useEffect(() => {
 		const handleFetchResult = async () => {
@@ -119,10 +128,11 @@ const Main = ({
 			}
 		};
 		handleFetchResult();
-	}, [counter, seqNo]);
+	}, [done, counter, seqNo]);
 
 	const nextQuestion = async (e) => {
 		e.preventDefault();
+
 		let newSkipped = skipped;
 		if (isStepSkipped(activeStep)) {
 			newSkipped = new Set(newSkipped.values());
@@ -131,8 +141,16 @@ const Main = ({
 
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
 		setSkipped(newSkipped);
+
 		try {
-			if (done === false) {
+			if (inputAnswer == '') {
+				console.log('inputAnswer', "james" + inputAnswer);
+				setInput(true);
+				console.log('input1', "james" + input1);
+				return;
+			}	
+
+			if (done === false ) {
 				const result = await axios.post(
 					`/api/word-exams/${seqNo}/orders/${counter}`,
 					{
@@ -148,6 +166,7 @@ const Main = ({
 				const isExamEnd = result.data.data.isExamEnd;
 				setInputAnswer('');
 				console.log({inputAnswer});
+				console.log({question});	
 				setDone(isExamEnd);
 				setNextbtn('clicked');
 				if (done === false) {
@@ -165,6 +184,7 @@ const Main = ({
 	}, [counter]);
 
 	const inputHandler = (e) => {
+		
 		setInputAnswer(e.target.value);
 		setInputLength(e.target.value.length);
 		if (counter === 1) {
@@ -189,8 +209,10 @@ const Main = ({
 	};
 
 	let getSteps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
+	
+	
 	return (
+		
 		<Grid container className={styles.mainWrapper}>
 			<Grid className={styles.navWrapper}>
 				<Grid className={styles.navText}>VOCABULARY TEST</Grid>
@@ -212,7 +234,7 @@ const Main = ({
 			</Grid>
 			<Grid className={styles.bodyWrapper}>
 				<Steps />
-
+				
 				<form
 					className={styles.mainBodyContent}
 					onSubmit={nextQuestion}
@@ -232,6 +254,11 @@ const Main = ({
 							alt={skipBtn}
 							onClick={nextQuestion}
 							className={styles.skipBtn}
+							style={{
+								width: 150,
+								height: 60,
+								visibility: 'hidden',
+							}}
 						/>
 					) : (
 						<img
@@ -326,12 +353,18 @@ const Main = ({
 						onClickFinish={onClickFinish}
 						handleClose1={handleClose1}
 					/>
+					<InputModal
+						input1={input1}
+						onClickInput={onClickInput}
+						handleInput={handleInput}
+					/>					
 				</form>
 				<LineChart examResult={examResult} level={level} />
 
 				<Grid className={styles.footer}></Grid>
 			</Grid>
 		</Grid>
+		
 	);
 };
 

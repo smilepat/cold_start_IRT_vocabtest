@@ -12,6 +12,7 @@ function App() {
 	const [seqNo, setSeqNo] = useState(0);
 	const [openQuit, setOpenQuit] = useState(false);
 	const [openFinish, setOpenFinish] = useState(false);
+	const [noInput, setNoInput] = useState(false);
 	const completed = useRef();
 
 	useEffect(() => {
@@ -45,10 +46,13 @@ function App() {
 									seqNo={seqNo}
 									onClickQuit={() => setOpenQuit(true)}
 									onClickFinish={() => setOpenFinish(true)}
+									onClickInput={() => setNoInput(true)}
 									open={openQuit}
 									handleClose={() => setOpenQuit(false)}
 									open1={openFinish}
+									input1={noInput}
 									handleClose1={() => setOpenFinish(false)}
+									handleInput={() => setNoInput(false)}
 								/>
 							)}
 						/>

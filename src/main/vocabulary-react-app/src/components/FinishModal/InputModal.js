@@ -12,7 +12,7 @@ import useStyles from './styles';
 
 import modalImg2 from 'Images/Modal/analysis.png';
 
-function FinishModal({open1, onClickFinish, handleClose1}) {
+function InputModal({input1, onClickInput, handleInput}) {
 	const classes = useStyles();
 	const history = useHistory();
 
@@ -20,8 +20,8 @@ function FinishModal({open1, onClickFinish, handleClose1}) {
 		<div>
 			<Modal
 				className={classes.modal}
-				open={open1}
-				onClose={handleClose1}
+				open={input1}
+				onClose={handleInput}
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
@@ -30,13 +30,13 @@ function FinishModal({open1, onClickFinish, handleClose1}) {
 					},
 				}}
 			>
-				<Fade in={open1}>
+				<Fade in={input1}>
 					<div className={classes.paper}>
 						<h2
 							id='transition-modal-title'
 							className={classes.h2Text}
 						>
-							테스트 완료!
+						   꼭 하나는 선택해야합니다!
 						</h2>
 						<RubberBand>
 							<div className={classes.modalImgWrapper}>
@@ -47,61 +47,14 @@ function FinishModal({open1, onClickFinish, handleClose1}) {
 							id='transition-modal-description'
 							className={classes.pText}
 						>
-							단어 테스트 결과를 분석중입니다.
+							
 						</p>
 						<DialogActions style={{justifyContent: 'center'}}>
 							<Button
 								variant='contained'
 								className={classes.closeButton}
 								onClick={() => {
-									handleClose1();
-									history.push('/result');
-								}}
-							>
-								결과 보기
-							</Button>
-						</DialogActions>
-					</div>
-				</Fade>
-			</Modal>
-			<Modal
-				className={classes.modal}
-				open={open1}
-				onClose={handleClose1}
-				closeAfterTransition
-				BackdropComponent={Backdrop}
-				BackdropProps={{
-					classes: {
-						root: classes.backrop,
-					},
-				}}
-			>
-				<Fade in={open1}>
-					<div className={classes.paper}>
-						<h2
-							id='transition-modal-title'
-							className={classes.h2Text}
-						>
-							입력 완료!
-						</h2>
-						<RubberBand>
-							<div className={classes.modalImgWrapper}>
-								<img src={modalImg2} alt={modalImg2} />
-							</div>
-						</RubberBand>
-						<p
-							id='transition-modal-description'
-							className={classes.pText}
-						>
-							입력 분석.
-						</p>
-						<DialogActions style={{justifyContent: 'center'}}>
-							<Button
-								variant='contained'
-								className={classes.closeButton}
-								onClick={() => {
-									handleClose1();
-									history.push('/result');
+									handleInput();
 								}}
 							>
 								닫기
@@ -109,9 +62,9 @@ function FinishModal({open1, onClickFinish, handleClose1}) {
 						</DialogActions>
 					</div>
 				</Fade>
-			</Modal>			
+			</Modal>
 		</div>
 	);
 }
 
-export default FinishModal;
+export default InputModal;

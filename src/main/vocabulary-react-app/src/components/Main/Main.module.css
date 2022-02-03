@@ -46,8 +46,8 @@
 	justify-content: center;
 }
 .nextBtn {
-	left: 436px;
-	bottom: 125px;
+	left: 386px;
+	bottom: 137px;
 	cursor: pointer;
 	position: relative;
 }
@@ -158,9 +158,9 @@
 }
 
 .radioAnswerBox {
-	margin-top: 5rem;
-	font-size: 2.5rem;
-	padding-left: 200px;
+	margin-top: 3rem;
+	font-size: 2.0rem;
+	padding-left: 250px;
 	text-align: left;
 }
 
@@ -219,13 +219,19 @@ input[type=radio] {
 	justify-content: center;
 }
 .exampleSentence {
-	top: 20px;
-	font-size: 22px;
-	color: #8e8e8e;
+	top: 5px;
+	width: 80rem;
+	font-size: 26px;
+	color: #000000;
+	text-align: left;
+	font-style: normal;
+	margin-left: 20rem;
 	position: relative;
 	font-weight: normal;
 	font-stretch: normal;
+	letter-spacing: normal;
 	font-family: 'Noto Sans', sans-serif;
+	border: #003939;
 }
 .chart {
 	left: -7rem;

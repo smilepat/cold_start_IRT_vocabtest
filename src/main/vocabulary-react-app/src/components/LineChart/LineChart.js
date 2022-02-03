@@ -30,8 +30,8 @@ const LineChart = ({examResult, level}) => {
 		let order =
 			index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th';
 
-		if (answer != null) {
-			if (lastMedian != median) {
+		if (answer !== null) {
+			if (lastMedian !== median) {
 				graphData.push({
 					name: `${index + 1}${order}`,
 					uv: median,
