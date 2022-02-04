@@ -259,6 +259,12 @@ public class WordExamServiceImpl implements WordExamService {
         //boolean isExamEnd = getNextDetailSection(wordExamDetails) == targetWord.getDetailSection();
 
         boolean isExamEnd = false;
+
+        /*
+        if (examOrder > 3)
+        	isExamEnd = true;
+        */
+
         SeqRange seqRange = getNextRange(wordExamDetails);
         if ((seqRange.getHighLimit() - seqRange.getLowLimit()) <= window) {
         	isExamEnd = true;
@@ -623,5 +629,15 @@ public class WordExamServiceImpl implements WordExamService {
         }
 
         return wordExamResult.get();
+    }
+
+    @Override
+    public List<Word> getWordCard(Long lowSeqno, Long highSeqno) {
+        if (Objects.isNull(lowSeqno) || Objects.isNull(highSeqno)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+        }
+
+        List<Word> words = wordRepository.findByWordSeqnoBetween(lowSeqno, highSeqno);
+        return words;
     }
 }

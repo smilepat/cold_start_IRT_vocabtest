@@ -30,7 +30,7 @@ const Desktop = ({ children }) => {
   }
   const Portrait = ({ children }) => {
 	const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
-	return isPortrait ? children : null	
+	return isPortrait ? children : null
   }
 function Intro({history}) {
 	const classes = useStyles();

@@ -318,6 +318,7 @@ function Result({history, seqNo}) {
 									setStudyButtonType('default');
 								}}
 								onClick={() => {
+									history.push('/wordcard');
 									setStudyButtonType('clicked');
 								}}
 							/>

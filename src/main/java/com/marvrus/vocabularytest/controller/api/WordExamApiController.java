@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -66,5 +67,14 @@ public class WordExamApiController {
             @PathVariable("wordExamSeqno") @ApiParam("어휘력테스트 고유번호") Long wordExamSeqno
     ) {
         return wordExamService.getWordExamProgress(wordExamSeqno);
+    }
+
+    @GetMapping("/wordcard/{lowSeqno}/{highSeqno}")
+    @ApiOperation(value = "어휘 단어 카드 테스트", notes = "어휘 단어 카드 테스트")
+    public List<Word> getWordCard(
+            @PathVariable("lowSeqno") @ApiParam("어휘 테스트 낮은 고유 번호") Long lowSeqno,
+            @PathVariable("highSeqno") @ApiParam("어휘 테스트 높은 고유 번호") Long highSeqno
+    ) {
+        return wordExamService.getWordCard(lowSeqno, highSeqno);
     }
 }

@@ -6,6 +6,7 @@ import Intro from './components/Intro/Intro';
 import Main from './components/Main/Main';
 import Error from './components/Error/Error';
 import Result from './components/Result/Result';
+import WordCard from './components/WordCard/WordCard';
 import axios from "axios/axios"
 
 function App() {
@@ -19,8 +20,9 @@ function App() {
 		async function testStart() {
 			try {
 				const result = await axios.post(`/api/word-exams`, {});
-				if (!completed.current)
+				if (!completed.current) {
 					setSeqNo(result.data.data.wordExamSeqno);
+				}
 				console.log('result', result);
 			} catch (error) {
 				console.log(error.response);
@@ -59,6 +61,17 @@ function App() {
 						<Route
 							path='/result'
 							render={() => <Result seqNo={seqNo} />}
+						/>
+						<Route
+							path='/wordcard'
+							render={() => (
+								<WordCard
+									seqNo={seqNo}
+									onClickQuit={() => setOpenQuit(true)}
+									open={openQuit}
+									handleClose={() => setOpenQuit(false)}
+								/>
+							)}
 						/>
 						<Route path='*' component={Error} />
 					</Switch>
