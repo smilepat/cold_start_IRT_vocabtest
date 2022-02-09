@@ -21,6 +21,7 @@ import nextBtnNormal from 'Images/WordCard/next_btn_normal.png';
 import prevBtnClicked from 'Images/WordCard/prev_btn_pressed.png';
 import prevBtnHover from 'Images/WordCard/prev_btn_hover.png';
 import prevBtnNormal from 'Images/WordCard/prev_btn_normal.png';
+import ReactCardFlip from 'react-card-flip';
 
 const WordCard = ({
 		history,
@@ -39,8 +40,15 @@ const WordCard = ({
 	const [nextBtn, setNextbtn] = useState('default');
 	const [prevBtn, setPrevbtn] = useState('default');
 	const [openLoading, setOpenLoading] = React.useState(false);
+	const [isFlipped, setFlipped] = React.useState(false);
+	const [isFlippedWord, setFlippedWord] = React.useState(false);
+	const [isFlipVertical, setFlippedVertical] = React.useState(false);
 	const [cardWords, setCardWords] = useState([]);
 	const [uiCardWord, setUiCardWord] = useState('');
+	const [uiCardMeaning, setUiCardMeaning] = useState('');
+	const [uiCardEnglish, setUiCardEnglish] = useState('');
+	const [uiCardFront, setUiCardFront] = useState('');
+	const [uiCardBack, setUiCardBack] = useState('');
 	const [currentWord, setCurrentWord] = useState('');
 	const [previousWord, setPreviousWord] = useState('');
 
@@ -75,7 +83,7 @@ const WordCard = ({
 				setCurrentWord(wordCards.data.data[initIndex]);
 				setPreviousWord(wordCards.data.data[initIndex]);
 				setUiCardWord(wordCards.data.data[initIndex].word)
-
+				setUiCardBack(wordCards.data.data[initIndex].word);
 
 			} catch (err) {
 				alert('Error occured ' + err);
@@ -88,9 +96,46 @@ const WordCard = ({
 
 	}, [seqNo]);
 
+	/*
 	useEffect(() => {
-		setUiCardWord(cardWords.word);
+		console.log(cardWords.word);
 	}, [cardWords]);
+	 */
+
+	useEffect(() => {
+
+		setFlipped(true);
+		if (!isFlipVertical) {
+			setFlippedWord(!isFlippedWord);
+		}
+
+	}, [isFlipVertical]);
+
+	useEffect(() => {
+		// isFlipped = true, means it is back of the card being shown
+		if (isFlipped) {
+			setUiCardEnglish("");
+			setUiCardMeaning(uiCardWord);
+		}
+		else {
+			setUiCardMeaning("");
+			setUiCardEnglish(uiCardWord);
+		}
+
+	}, [isFlipped]);
+
+	useEffect(() => {
+
+		if (isFlippedWord) {
+			setUiCardFront("");
+			setUiCardBack(uiCardWord);
+		}
+		else {
+			setUiCardBack("");
+			setUiCardFront(uiCardWord);
+		}
+
+	}, [isFlippedWord]);
 
 	const nextWord = async (e) => {
 		e.preventDefault();
@@ -106,10 +151,14 @@ const WordCard = ({
 
 		setCurrentWord(word);
 		setPreviousWord(currentWord);
-		setUiCardWord(word.word)
+		setUiCardWord(word.word);
+
+		setFlippedWord(!isFlippedWord);
+		setFlippedVertical(false);
 
 		setNextbtn('default');
 	};
+
 	const prevWord = async (e) => {
 		e.preventDefault();
 		setPrevbtn('clicked');
@@ -124,21 +173,27 @@ const WordCard = ({
 
 		setCurrentWord(word);
 		setPreviousWord(currentWord);
-		setUiCardWord(word.word)
+		setUiCardWord(word.word);
+
+		if (isFlippedWord)
+
+		setFlippedWord(!isFlippedWord);
+		setFlippedVertical(false);
 
 		setPrevbtn('default');
 	};
 
 	const flipWord = async (e) => {
+		e.preventDefault();
+
 		if (currentWord.word.localeCompare(uiCardWord) === 0) {
 			setUiCardWord(currentWord.meaning);
 		} else {
 			setUiCardWord(currentWord.word);
 		}
-	};
 
-	const handleToggleLoading = () => {
-		setOpenLoading(!openLoading);
+		setFlipped(!isFlipped);
+		setFlippedVertical(true);
 	};
 
 	return (
@@ -165,18 +220,61 @@ const WordCard = ({
 					handleClose={handleClose}
 				/>
 			</Grid>
-			<Grid>
-		 		<Paper elevation={12} className={styles.paper}
-		 			style={{
-		 				display: "flex",
-			 		    justifyContent: "center",
-			 		    alignItems: "center",
-			 		    textAlign: "center",
-			 		    verticalAlign: "middle",
-			 		    borderRadius: "25px"
-		 		    }}>
-		 			{uiCardWord}
-		 		</Paper>
+			<Grid className={styles.paperParent}>
+			  	{isFlipVertical && (
+				    <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
+						<Paper elevation={12} className={styles.paper}
+				 			style={{
+				 				display: "flex",
+					 		    justifyContent: "center",
+					 		    alignItems: "center",
+					 		    textAlign: "center",
+					 		    verticalAlign: "middle",
+					 		    borderRadius: "25px"
+				 		    }}>
+				 			{uiCardEnglish}
+				 		</Paper>
+				 		<Paper elevation={12} className={styles.paper}
+				 			style={{
+				 				color: "white",
+				 				background: "#68c8c7",
+				 				display: "flex",
+					 		    justifyContent: "center",
+					 		    alignItems: "center",
+					 		    textAlign: "center",
+					 		    verticalAlign: "middle",
+					 		    borderRadius: "25px"
+				 		    }}>
+				 			{uiCardMeaning}
+				 		</Paper>
+					</ReactCardFlip>
+			  	)}
+			  	{!isFlipVertical && (
+				    <ReactCardFlip isFlipped={isFlippedWord} flipDirection="horizontal">
+						<Paper elevation={12} className={styles.paper}
+				 			style={{
+				 				display: "flex",
+					 		    justifyContent: "center",
+					 		    alignItems: "center",
+					 		    textAlign: "center",
+					 		    verticalAlign: "middle",
+					 		    borderRadius: "25px"
+				 		    }}>
+				 			{uiCardFront}
+				 		</Paper>
+				 		<Paper elevation={12} className={styles.paper}
+				 			style={{
+				 				display: "flex",
+					 		    justifyContent: "center",
+					 		    alignItems: "center",
+					 		    textAlign: "center",
+					 		    verticalAlign: "middle",
+					 		    borderRadius: "25px"
+				 		    }}>
+				 			{uiCardBack}
+				 		</Paper>
+					</ReactCardFlip>
+			  	)}
 			</Grid>
 			<Grid container spacing={2}>
 			  <Grid item xs={6}>

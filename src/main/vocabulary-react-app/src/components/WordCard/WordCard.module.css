@@ -14,10 +14,14 @@
 
 .paper {
 	font-size: 6rem;
-	margin: 10rem 0 3rem 0;
 	width: 60rem;
 	height: 40rem;
 	padding: 0 3rem;
+}
+
+.paperParent {
+	height: 42rem;
+	padding: 10rem 0 3rem 0;
 }
 
 .getWordButton {
@@ -41,6 +45,7 @@
 	width: 20rem !important;
 	height: 10rem !important;
 	background-color: #68c8c7 !important;
+	border-radius: 20px !important;
 }
 
 .mainWrapper {

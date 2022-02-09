@@ -259,11 +259,10 @@ public class WordExamServiceImpl implements WordExamService {
         //boolean isExamEnd = getNextDetailSection(wordExamDetails) == targetWord.getDetailSection();
 
         boolean isExamEnd = false;
-
-        /*
-        if (examOrder > 3)
+/*
+        if (examOrder > 1)
         	isExamEnd = true;
-        */
+*/
 
         SeqRange seqRange = getNextRange(wordExamDetails);
         if ((seqRange.getHighLimit() - seqRange.getLowLimit()) <= window) {
