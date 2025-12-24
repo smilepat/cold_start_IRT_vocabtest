@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 
-import axios from "axios/axios"
+import axios from "../../axios/axios"
 import {withRouter} from 'react-router-dom'
 import {useMediaQuery} from 'react-responsive'
 

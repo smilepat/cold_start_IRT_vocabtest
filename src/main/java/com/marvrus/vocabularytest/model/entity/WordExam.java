@@ -51,6 +51,27 @@ public class WordExam {
     @ApiModelProperty("단어 레벨 상세")
     private int examDetailSection;
 
+    // IRT 관련 필드
+    @Column(name = "initial_theta")
+    @ApiModelProperty("초기 능력 추정치 (Theta)")
+    private Double initialTheta = 0.0;
+
+    @Column(name = "final_theta")
+    @ApiModelProperty("최종 능력 추정치 (Theta)")
+    private Double finalTheta;
+
+    @Column(name = "standard_error")
+    @ApiModelProperty("측정 표준오차 (SE)")
+    private Double standardError;
+
+    @Column(name = "question_count")
+    @ApiModelProperty("출제 문항 수")
+    private Integer questionCount = 0;
+
+    @Column(name = "termination_reason")
+    @ApiModelProperty("종료 사유")
+    private String terminationReason;
+
     @OneToMany
     @JoinColumn(name = "word_exam_seqno", insertable = false, updatable = false)
     private List<WordExamDetail> wordExamDetails;
@@ -117,5 +138,46 @@ public class WordExam {
 
     public void setWordExamDetails(List<WordExamDetail> wordExamDetails) {
         this.wordExamDetails = wordExamDetails;
+    }
+
+    // IRT Getter/Setter
+    public Double getInitialTheta() {
+        return initialTheta != null ? initialTheta : 0.0;
+    }
+
+    public void setInitialTheta(Double initialTheta) {
+        this.initialTheta = initialTheta;
+    }
+
+    public Double getFinalTheta() {
+        return finalTheta;
+    }
+
+    public void setFinalTheta(Double finalTheta) {
+        this.finalTheta = finalTheta;
+    }
+
+    public Double getStandardError() {
+        return standardError;
+    }
+
+    public void setStandardError(Double standardError) {
+        this.standardError = standardError;
+    }
+
+    public Integer getQuestionCount() {
+        return questionCount != null ? questionCount : 0;
+    }
+
+    public void setQuestionCount(Integer questionCount) {
+        this.questionCount = questionCount;
+    }
+
+    public String getTerminationReason() {
+        return terminationReason;
+    }
+
+    public void setTerminationReason(String terminationReason) {
+        this.terminationReason = terminationReason;
     }
 }

@@ -1,6 +1,7 @@
 package com.marvrus.vocabularytest.repository;
 
 import com.marvrus.vocabularytest.model.entity.Word;
+import com.marvrus.vocabularytest.model.enums.YesNo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,21 @@ public interface WordRepository extends JpaRepository<Word, Long> {
 
     @Query(value = "SELECT max(wordSeqno) FROM Word")
     Long getMaxWordSeqno();
+
+    // IRT CAT용 메서드
+    List<Word> findByActiveYn(YesNo activeYn);
+
+    List<Word> findByResponseCountGreaterThanEqual(int minResponseCount);
+
+    @Query("SELECT COUNT(w) FROM Word w WHERE w.lastCalibrated IS NOT NULL")
+    long countByLastCalibratedIsNotNull();
+
+    @Query("SELECT COUNT(w) FROM Word w WHERE w.responseCount >= ?1")
+    long countByResponseCountGreaterThanEqual(int minResponseCount);
+
+    // 난이도 범위로 문항 조회
+    List<Word> findByDifficultyBetween(Double minDifficulty, Double maxDifficulty);
+
+    // 난이도 순 정렬 조회
+    List<Word> findByActiveYnOrderByDifficultyAsc(YesNo activeYn);
 }

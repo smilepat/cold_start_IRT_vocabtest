@@ -45,6 +45,25 @@ public class WordExamDetail {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDt;
 
+    // IRT 관련 필드
+    @Column(name = "theta_before")
+    private Double thetaBefore;  // 응답 전 능력 추정치
+
+    @Column(name = "theta_after")
+    private Double thetaAfter;  // 응답 후 능력 추정치
+
+    @Column(name = "se_before")
+    private Double seBefore;  // 응답 전 표준오차
+
+    @Column(name = "se_after")
+    private Double seAfter;  // 응답 후 표준오차
+
+    @Column(name = "item_information")
+    private Double itemInformation;  // 해당 문항의 정보량
+
+    @Column(name = "response_time_ms")
+    private Integer responseTimeMs;  // 응답 시간(밀리초)
+
     @OneToOne
     @JoinColumn(name = "word_seqno", insertable = false, updatable = false)
     private Word word;
@@ -127,5 +146,54 @@ public class WordExamDetail {
 
     public void setWord(Word word) {
         this.word = word;
+    }
+
+    // IRT Getter/Setter
+    public Double getThetaBefore() {
+        return thetaBefore;
+    }
+
+    public void setThetaBefore(Double thetaBefore) {
+        this.thetaBefore = thetaBefore;
+    }
+
+    public Double getThetaAfter() {
+        return thetaAfter;
+    }
+
+    public void setThetaAfter(Double thetaAfter) {
+        this.thetaAfter = thetaAfter;
+    }
+
+    public Double getSeBefore() {
+        return seBefore;
+    }
+
+    public void setSeBefore(Double seBefore) {
+        this.seBefore = seBefore;
+    }
+
+    public Double getSeAfter() {
+        return seAfter;
+    }
+
+    public void setSeAfter(Double seAfter) {
+        this.seAfter = seAfter;
+    }
+
+    public Double getItemInformation() {
+        return itemInformation;
+    }
+
+    public void setItemInformation(Double itemInformation) {
+        this.itemInformation = itemInformation;
+    }
+
+    public Integer getResponseTimeMs() {
+        return responseTimeMs;
+    }
+
+    public void setResponseTimeMs(Integer responseTimeMs) {
+        this.responseTimeMs = responseTimeMs;
     }
 }

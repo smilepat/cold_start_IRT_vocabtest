@@ -66,6 +66,29 @@ public class Word {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime updateDt;
 
+    // IRT 모수 (Item Response Theory Parameters)
+    @Column(name = "difficulty")
+    private Double difficulty;  // b 모수 (난이도), 범위: -3.0 ~ +3.0
+
+    @Column(name = "discrimination")
+    private Double discrimination = 1.0;  // a 모수 (변별도), 범위: 0.3 ~ 3.0
+
+    @Column(name = "guessing")
+    private Double guessing = 0.25;  // c 모수 (추측도), 4지선다 기본값
+
+    // 캘리브레이션 통계
+    @Column(name = "response_count")
+    private Integer responseCount = 0;  // 총 응답 수
+
+    @Column(name = "correct_count")
+    private Integer correctCount = 0;  // 정답 수
+
+    @Column(name = "last_calibrated")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime lastCalibrated;  // 마지막 캘리브레이션 시간
+
     public Long getWordSeqno() {
         return wordSeqno;
     }
@@ -184,5 +207,54 @@ public class Word {
 
     public void setUpdateDt(LocalDateTime updateDt) {
         this.updateDt = updateDt;
+    }
+
+    // IRT 모수 Getter/Setter
+    public Double getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Double difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public Double getDiscrimination() {
+        return discrimination != null ? discrimination : 1.0;
+    }
+
+    public void setDiscrimination(Double discrimination) {
+        this.discrimination = discrimination;
+    }
+
+    public Double getGuessing() {
+        return guessing != null ? guessing : 0.25;
+    }
+
+    public void setGuessing(Double guessing) {
+        this.guessing = guessing;
+    }
+
+    public Integer getResponseCount() {
+        return responseCount != null ? responseCount : 0;
+    }
+
+    public void setResponseCount(Integer responseCount) {
+        this.responseCount = responseCount;
+    }
+
+    public Integer getCorrectCount() {
+        return correctCount != null ? correctCount : 0;
+    }
+
+    public void setCorrectCount(Integer correctCount) {
+        this.correctCount = correctCount;
+    }
+
+    public LocalDateTime getLastCalibrated() {
+        return lastCalibrated;
+    }
+
+    public void setLastCalibrated(LocalDateTime lastCalibrated) {
+        this.lastCalibrated = lastCalibrated;
     }
 }

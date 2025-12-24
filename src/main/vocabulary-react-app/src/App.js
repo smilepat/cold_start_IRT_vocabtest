@@ -6,35 +6,37 @@ import Intro from './components/Intro/Intro';
 import Main from './components/Main/Main';
 import Error from './components/Error/Error';
 import Result from './components/Result/Result';
-import WordCard from './components/WordCard/WordCard';
-import axios from "axios/axios"
+import axios from "./axios/axios"
 
 function App() {
-	const [seqNo, setSeqNo] = useState(0);
+	const [examId, setExamId] = useState(0);
+	const [examData, setExamData] = useState(null);
 	const [openQuit, setOpenQuit] = useState(false);
 	const [openFinish, setOpenFinish] = useState(false);
 	const [noInput, setNoInput] = useState(false);
 	const completed = useRef();
 
+	// Start IRT CAT exam
 	useEffect(() => {
-		async function testStart() {
+		async function startIrtExam() {
 			try {
-				const result = await axios.post(`/api/word-exams`, {});
+				const result = await axios.post(`/api/irt/exam/start`, {});
 				if (!completed.current) {
-					setSeqNo(result.data.data.wordExamSeqno);
+					const exam = result.data;
+					setExamId(exam.wordExamSeqno);
+					setExamData(exam);
 				}
-				console.log('result', result);
+				console.log('IRT CAT exam started:', result.data);
 			} catch (error) {
-				console.log(error.response);
+				console.error('Failed to start exam:', error);
 			}
 		}
-		testStart();
+		startIrtExam();
 		return () => {
 			completed.current = true;
 		};
 	}, []);
 
-	console.log(seqNo);
 	return (
 		<div className={styles.App}>
 			<ResponsiveView>
@@ -45,7 +47,9 @@ function App() {
 							path='/main'
 							render={() => (
 								<Main
-									seqNo={seqNo}
+									examId={examId}
+									seqNo={examId}
+									examData={examData}
 									onClickQuit={() => setOpenQuit(true)}
 									onClickFinish={() => setOpenFinish(true)}
 									onClickInput={() => setNoInput(true)}
@@ -60,18 +64,7 @@ function App() {
 						/>
 						<Route
 							path='/result'
-							render={() => <Result seqNo={seqNo} />}
-						/>
-						<Route
-							path='/wordcard'
-							render={() => (
-								<WordCard
-									seqNo={seqNo}
-									onClickQuit={() => setOpenQuit(true)}
-									open={openQuit}
-									handleClose={() => setOpenQuit(false)}
-								/>
-							)}
+							render={() => <Result examId={examId} seqNo={examId} />}
 						/>
 						<Route path='*' component={Error} />
 					</Switch>

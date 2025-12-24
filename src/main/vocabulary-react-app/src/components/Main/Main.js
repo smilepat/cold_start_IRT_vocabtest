@@ -1,10 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
-
-import axios from "axios/axios"
+import axios from "../../axios/axios"
 import {withRouter} from 'react-router-dom';
-
 import Grid from '@material-ui/core/Grid';
-
 import styles from './Main.module.css';
 import Steps from 'components/Steps/Steps';
 import FinishModal from '../FinishModal/FinishModal';
@@ -14,13 +11,13 @@ import LineChart from 'components/LineChart/LineChart';
 import ProgressContainer from 'components/ProgressNew/ProgressNew';
 
 import quitBtn from 'Images/Main/quit_btn1.png';
-import skipBtn from 'Images/Main/skip_btn3.png';
 import nextBtnClicked from 'Images/Main/next_btn.png';
 import nextBtnHover from 'Images/Main/skip-btn-1-h.png';
 import nextBtnNormal from 'Images/Main/skip-btn-1-n.png';
 
 const Main = ({
 	history,
+	examId,
 	seqNo,
 	open1,
 	input1,
@@ -32,7 +29,7 @@ const Main = ({
 	handleClose1,
 	handleInput,
 }) => {
-	const [activeStep, setActiveStep] = React.useState(0);
+	const [activeStep, setActiveStep] = useState(0);
 	const [counter, setCounter] = useState(1);
 	const [done, setDone] = useState(false);
 	const [examResult, setExamResult] = useState([]);
@@ -46,89 +43,85 @@ const Main = ({
 	const [answerOption4, setAnswerOption4] = useState('');
 	const [answerOption5, setAnswerOption5] = useState('');
 	const [answerOptionId, setAnswerOptionId] = useState('');
-	const [skipped, setSkipped] = React.useState(new Set());
+	const [skipped, setSkipped] = useState(new Set());
 	const [toggleVisibility, setToggleVisibility] = useState(false);
-	const [toggleShadow, setToggleShadow] = useState(false);
-	const [inputLength, setInputLength] = useState(0);
 	const [nextBtn, setNextbtn] = useState('default');
 	const [input, setInput] = useState(false);
+	const [currentTheta, setCurrentTheta] = useState(0);
+	const [standardError, setStandardError] = useState(1);
+	const [responseStartTime, setResponseStartTime] = useState(Date.now());
 
-	const isStepSkipped = (step) => {
-		return skipped.has(step);
-	};
-
-	let steps = useRef(null);
+	const isStepSkipped = (step) => skipped.has(step);
 	const inputRef = useRef();
+
 	useEffect(() => {
 		if (input === true) {
 			onClickInput();
 			setInput(false);
 		}
-	}, [input]);
+	}, [input, onClickInput]);
+
 	useEffect(() => {
 		if (done === true) {
 			onClickFinish();
 		}
-	}, [done]);
-	useEffect(() => {
-		const res = async () => {
-			try {
-				if (done === true || seqNo === 0) return;
-				let response = await axios.get(
-					`/api/word-exams/${seqNo}/orders/${counter}`,
-				);
-				console.log('response after posting', response);
-				const {
-					word,
-					level,
-					exampleSentence: sentence,
-					korean: opt1,
-					option1: opt2,
-					option2: opt3,
-					option3: opt4,
-					unknown: opt5
-				} = response.data.data;
+	}, [done, onClickFinish]);
 
-				if (counter === 1) {
-					steps.current = level;
+	// Fetch current question from IRT CAT API
+	useEffect(() => {
+		const fetchCurrentQuestion = async () => {
+			try {
+				const id = examId || seqNo;
+				if (done === true || id === 0) return;
+
+				const response = await axios.get(`/api/irt/exam/${id}/current`);
+				const detail = response.data;
+
+				if (detail && detail.word) {
+					const word = detail.word;
+					const opts = [word.korean, word.option1, word.option2, word.option3];
+					opts.sort(() => 0.5 - Math.random());
+
+					setAnswerOption1(opts[0] || '');
+					setAnswerOption2(opts[1] || '');
+					setAnswerOption3(opts[2] || '');
+					setAnswerOption4(opts[3] || '');
+					setAnswerOption5(word.unknown || '모르겠습니다');
+
+					setLevel(word.level);
+					setExampleSentence(word.exampleSentence || '');
+					setQuestion(word.word);
+					setAnswerOptionId('');
+					setInputAnswer('');
+					setResponseStartTime(Date.now());
+
+					if (inputRef.current) {
+						inputRef.current.focus();
+					}
 				}
-
-				// Re-shuffle option, so next time it won't be on same order
-				const opts = [opt1, opt2, opt3, opt4];
-				opts.sort(() => 0.5 - Math.random());
-
-				setAnswerOption1(opts.pop())
-				setAnswerOption2(opts.pop())
-				setAnswerOption3(opts.pop())
-				setAnswerOption4(opts.pop())
-				setAnswerOption5(opt5)
-				
-				setLevel(level);
-				setExampleSentence(sentence);
-				setQuestion(word);
-				setAnswerOptionId('');
-				inputRef.current.focus();
 			} catch (error) {
-				console.error(error);
+				console.error('Failed to fetch question:', error);
 			}
 		};
-		res();
-	}, [done, seqNo, counter]);
+		fetchCurrentQuestion();
+	}, [done, examId, seqNo, counter]);
 
+	// Fetch exam history for chart
 	useEffect(() => {
-		const handleFetchResult = async () => {
-			if (counter <= 1) return;
+		const fetchExamResult = async () => {
+			const id = examId || seqNo;
+			if (counter <= 1 || id === 0) return;
 			try {
-				let res = await axios.get(`/api/word-exams/${seqNo}`);
-				console.log('each result', res);
-				setExamResult(res.data.data.wordExamDetails);
-				console.log('examEnd', done);
+				const res = await axios.get(`/api/irt/exam/${id}/result`);
+				if (res.data && res.data.wordExamDetails) {
+					setExamResult(res.data.wordExamDetails);
+				}
 			} catch (err) {
-				alert('Error occured');
+				console.error('Failed to fetch exam result:', err);
 			}
 		};
-		handleFetchResult();
-	}, [done, counter, seqNo]);
+		fetchExamResult();
+	}, [counter, examId, seqNo]);
 
 	const nextQuestion = async (e) => {
 		e.preventDefault();
@@ -138,88 +131,69 @@ const Main = ({
 			newSkipped = new Set(newSkipped.values());
 			newSkipped.delete(activeStep);
 		}
-
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		setActiveStep((prev) => prev + 1);
 		setSkipped(newSkipped);
 
 		try {
-			if (inputAnswer == '') {
-				console.log('inputAnswer', "james" + inputAnswer);
+			if (inputAnswer === '') {
 				setInput(true);
-				console.log('input1', "james" + input1);
 				return;
-			}	
+			}
 
-			if (done === false ) {
+			if (done === false) {
+				const id = examId || seqNo;
+				const responseTimeMs = Date.now() - responseStartTime;
+
+				// Submit answer to IRT CAT API
 				const result = await axios.post(
-					`/api/word-exams/${seqNo}/orders/${counter}`,
+					`/api/irt/exam/${id}/submit`,
+					null,
 					{
-						answer: `${inputAnswer}`,
-						word: `${question}`,
-					},
-					{
-						headers: {
-							Accept: 'application/json, text/plain, */*',
-						},
-					},
+						params: {
+							answer: inputAnswer,
+							responseTimeMs: responseTimeMs
+						}
+					}
 				);
-				const isExamEnd = result.data.data.isExamEnd;
+
+				const submitResult = result.data;
+				setCurrentTheta(submitResult.currentTheta || submitResult.finalTheta || 0);
+				setStandardError(submitResult.standardError || 1);
+
+				const isExamEnd = submitResult.examEnd;
 				setInputAnswer('');
-				console.log({inputAnswer});
-				console.log({question});	
 				setDone(isExamEnd);
 				setNextbtn('clicked');
-				if (done === false) {
+
+				if (!isExamEnd) {
 					setCounter(counter + 1);
 				}
-				console.log('result', result);
 			}
 		} catch (err) {
-			alert('err', err);
+			console.error('Failed to submit answer:', err);
 		}
 	};
+
 	useEffect(() => {
-		setToggleShadow(false);
 		setNextbtn('default');
 	}, [counter]);
-
-	const inputHandler = (e) => {
-		
-		setInputAnswer(e.target.value);
-		setInputLength(e.target.value.length);
-		if (counter === 1) {
-			e.target.value.length >= 1
-				? setToggleVisibility(true)
-				: setToggleVisibility(false);
-		}
-		e.target.value.length > 1
-			? setToggleShadow(true)
-			: setToggleShadow(false);
-	};
 
 	const answerHandler = (e) => {
 		setAnswerOptionId(e.target.id);
 		setInputAnswer(e.target.value);
-		setInputLength(e.target.value.length);
-		if (counter === 1) {
-			e.target.value.length >= 1
-				? setToggleVisibility(true)
-				: setToggleVisibility(false);
-		}
+		setToggleVisibility(true);
 	};
 
-	let getSteps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-	
-	
+	const getSteps = Array.from({length: 30}, (_, i) => i + 1);
+
 	return (
-		
 		<Grid container className={styles.mainWrapper}>
 			<Grid className={styles.navWrapper}>
-				<Grid className={styles.navText}>VOCABULARY TEST</Grid>
+				<Grid className={styles.navText}>IRT CAT VOCABULARY TEST</Grid>
 				<Grid className={styles.modalWrapper}>
 					<img
 						src={quitBtn}
-						alt={quitBtn}
+						alt="quit"
 						width='150'
 						height='60'
 						className={styles.quitBtn}
@@ -234,11 +208,8 @@ const Main = ({
 			</Grid>
 			<Grid className={styles.bodyWrapper}>
 				<Steps />
-				
-				<form
-					className={styles.mainBodyContent}
-					onSubmit={nextQuestion}
-				>
+
+				<form className={styles.mainBodyContent} onSubmit={nextQuestion}>
 					<ProgressContainer
 						done={done}
 						counter={counter}
@@ -246,89 +217,68 @@ const Main = ({
 						activeStep={activeStep}
 						isStepSkipped={isStepSkipped}
 					/>
-					{done === false ? (
-						<img
-							height='60'
-							width='150'
-							src={skipBtn}
-							alt={skipBtn}
-							onClick={nextQuestion}
-							className={styles.skipBtn}
-							style={{
-								width: 150,
-								height: 60,
-								visibility: 'hidden',
-							}}
-						/>
-					) : (
-						<img
-							style={{
-								width: 150,
-								height: 60,
-								visibility: 'hidden',
-							}}
-						/>
-					)}
+
+					<Grid style={{textAlign: 'center', marginBottom: '10px', color: '#666'}}>
+						θ: {currentTheta.toFixed(2)} | SE: {standardError.toFixed(2)} | 문항: {counter}
+					</Grid>
+
 					<Grid className={styles.mainContentText}>
-						영어 단어를 보고, 알맞은 한글 뜻을 입력해주세요.
+						영어 단어를 보고, 알맞은 한글 뜻을 선택하세요.
 					</Grid>
 					<Grid className={styles.voca}>{question}</Grid>
-
-					<Grid className={styles.exampleSentence}>
-						{exampleSentence}
-					</Grid>
+					<Grid className={styles.exampleSentence}>{exampleSentence}</Grid>
 
 					<Grid className={styles.inputWrapper}>
-						<div className={styles.radioAnswerBox}>
-						    <div className="radio">
-					          <label>
-					            <input id="answerOptionId1" name="answerRadio" type="radio"
-					            	value={answerOption1}
-					            	checked={answerOptionId === "answerOptionId1"}
-					            	onChange={answerHandler}/>
-					            <label className={styles.radioAnswerText}>{answerOption1}</label>
-					          </label>
-					        </div>
-						    <div className="radio">
-					          <label>
-					            <input id="answerOptionId2" name="answerRadio" type="radio"
-					            	value={answerOption2}
-					            	checked={answerOptionId === "answerOptionId2"}
-					            	onChange={answerHandler}/>
-					            <label className={styles.radioAnswerText}>{answerOption2}</label>
-					          </label>
-					        </div>
-					        <div className="radio">
-					          <label>
-					            <input id="answerOptionId3" name="answerRadio" type="radio"
-					            	value={answerOption3}
-					            	checked={answerOptionId === "answerOptionId3"}
-					            	onChange={answerHandler}/>
-					            <label className={styles.radioAnswerText}>{answerOption3}</label>
-					          </label>
-					        </div>
-					        <div className="radio">
-					          <label>
-					            <input id="answerOptionId4" name="answerRadio" type="radio"
-					            	value={answerOption4}
-					            	checked={answerOptionId === "answerOptionId4"}
-					            	onChange={answerHandler}/>
-					            <label className={styles.radioAnswerText}>{answerOption4}</label>
-					          </label>
-					        </div>
-					        <div className="radio">
-					          <label>
-					            <input id="answerOptionId5" name="answerRadio" type="radio"
-					            	value={answerOption5}
-					            	checked={answerOptionId === "answerOptionId5"}
-					            	onChange={answerHandler}/>
-					            <label className={styles.radioAnswerText}>{answerOption5}</label>
-					          </label>
-					        </div>
-				        </div>
-				    </Grid>
+						<div className={styles.radioAnswerBox} ref={inputRef}>
+							<div className="radio">
+								<label>
+									<input id="answerOptionId1" name="answerRadio" type="radio"
+										value={answerOption1}
+										checked={answerOptionId === "answerOptionId1"}
+										onChange={answerHandler}/>
+									<label className={styles.radioAnswerText}>{answerOption1}</label>
+								</label>
+							</div>
+							<div className="radio">
+								<label>
+									<input id="answerOptionId2" name="answerRadio" type="radio"
+										value={answerOption2}
+										checked={answerOptionId === "answerOptionId2"}
+										onChange={answerHandler}/>
+									<label className={styles.radioAnswerText}>{answerOption2}</label>
+								</label>
+							</div>
+							<div className="radio">
+								<label>
+									<input id="answerOptionId3" name="answerRadio" type="radio"
+										value={answerOption3}
+										checked={answerOptionId === "answerOptionId3"}
+										onChange={answerHandler}/>
+									<label className={styles.radioAnswerText}>{answerOption3}</label>
+								</label>
+							</div>
+							<div className="radio">
+								<label>
+									<input id="answerOptionId4" name="answerRadio" type="radio"
+										value={answerOption4}
+										checked={answerOptionId === "answerOptionId4"}
+										onChange={answerHandler}/>
+									<label className={styles.radioAnswerText}>{answerOption4}</label>
+								</label>
+							</div>
+							<div className="radio">
+								<label>
+									<input id="answerOptionId5" name="answerRadio" type="radio"
+										value={answerOption5}
+										checked={answerOptionId === "answerOptionId5"}
+										onChange={answerHandler}/>
+									<label className={styles.radioAnswerText}>{answerOption5}</label>
+								</label>
+							</div>
+						</div>
+					</Grid>
 
-					{toggleVisibility === true ? (
+					{toggleVisibility && (
 						<img
 							src={
 								nextBtn === 'hover'
@@ -337,17 +287,14 @@ const Main = ({
 									? nextBtnClicked
 									: nextBtnNormal
 							}
-							alt={nextBtnNormal}
+							alt="next"
 							className={styles.nextBtn}
-							onMouseEnter={() => {
-								setNextbtn('hover');
-							}}
-							onMouseLeave={() => {
-								setNextbtn('default');
-							}}
+							onMouseEnter={() => setNextbtn('hover')}
+							onMouseLeave={() => setNextbtn('default')}
 							onClick={nextQuestion}
 						/>
-					) : null}
+					)}
+
 					<FinishModal
 						open1={open1}
 						onClickFinish={onClickFinish}
@@ -357,14 +304,13 @@ const Main = ({
 						input1={input1}
 						onClickInput={onClickInput}
 						handleInput={handleInput}
-					/>					
+					/>
 				</form>
-				<LineChart examResult={examResult} level={level} />
 
+				<LineChart examResult={examResult} level={level} />
 				<Grid className={styles.footer}></Grid>
 			</Grid>
 		</Grid>
-		
 	);
 };
 
