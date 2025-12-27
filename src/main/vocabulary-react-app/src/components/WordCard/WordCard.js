@@ -58,41 +58,51 @@ const WordCard = ({
 			setOpenLoading(true);
 
 			try {
-				const res = await axios.get(`/api/word-exams/${seqNo}`);
-				const exams = res.data.data.wordExamDetails;
-				const sortedExams = [...exams].sort((a, b) => b.examOrder - a.examOrder)
-				const lastExam = sortedExams[0];
+				// Fetch exam result from IRT CAT API
+				const res = await axios.get(`/api/irt/exam/${seqNo}/result`);
+				const examData = res.data;
+				const examDetails = examData.wordExamDetails || [];
 
-				const currIdx = lastExam.wordSeqno;
-				var lowIdx = lastExam.wordSeqnoLowLimit;
-				var highIdx = lastExam.wordSeqnoHighLimit;
+				if (examDetails.length === 0) {
+					console.warn('No exam details found');
+					setOpenLoading(false);
+					return;
+				}
 
-				highIdx = currIdx + 50;
-				lowIdx = currIdx - 50;
+				// Extract words from exam details for card study
+				const words = examDetails
+					.filter(detail => detail.word)
+					.map(detail => ({
+						word: detail.word.word,
+						meaning: detail.word.korean || detail.word.meaning,
+						wordSeqno: detail.word.wordSeqno
+					}));
 
-				// Only can go as high and as low as the range limit
-				if (highIdx > lastExam.wordSeqnoHighLimit)
-					highIdx = lastExam.wordSeqnoHighLimit
-				if (lowIdx < lastExam.wordSeqnoLowLimit)
-					lowIdx = lastExam.wordSeqnoLowLimit
+				if (words.length === 0) {
+					console.warn('No words found in exam details');
+					setOpenLoading(false);
+					return;
+				}
 
-				const wordCards = await axios.get(`/api/word-exams/wordcard/${lowIdx}/${highIdx}`);
-				setCardWords(wordCards.data.data);
-				const initIndex = Math.floor(Math.random() * wordCards.data.data.length);
+				setCardWords(words);
+				const initIndex = Math.floor(Math.random() * words.length);
 
-				setCurrentWord(wordCards.data.data[initIndex]);
-				setPreviousWord(wordCards.data.data[initIndex]);
-				setUiCardWord(wordCards.data.data[initIndex].word)
-				setUiCardBack(wordCards.data.data[initIndex].word);
+				setCurrentWord(words[initIndex]);
+				setPreviousWord(words[initIndex]);
+				setUiCardWord(words[initIndex].word);
+				setUiCardBack(words[initIndex].word);
 
 			} catch (err) {
-				alert('Error occured ' + err);
+				console.error('Failed to fetch exam result:', err);
+				alert('단어 카드를 불러오는데 실패했습니다.');
 			}
 
 			setOpenLoading(false);
 		};
 
-		handleFetchResult();
+		if (seqNo && seqNo > 0) {
+			handleFetchResult();
+		}
 
 	}, [seqNo]);
 
