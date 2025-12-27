@@ -45,7 +45,7 @@ public class Word {
     @Column(name = "option3")
     private String option3;
 
-    @Column(name = "unknown")
+    @Column(name = "unknown_option")
     private String unknown;
 
     @Column(name = "answer")

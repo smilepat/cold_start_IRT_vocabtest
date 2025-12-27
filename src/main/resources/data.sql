@@ -1,4 +1,4 @@
-﻿-- Insert word data
+-- Insert word data
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('The', '그, 그 것의', 1, -2.4994, 1.0, 0.25, '우리(들)', '좋게, 잘', '이르다, 도달하다, 얻다');
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('And', '-와/과, -고, 그리고', 2, -2.4989, 1.0, 0.25, '가지다', '모든', '바른, 옳은');
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('I', '나, 내가, 나는', 3, -2.4983, 1.0, 0.25, '알다, 알고 있다', '숫자 1 , 하나의', '그때에, 그때는');
@@ -9013,3 +9013,12 @@ INSERT INTO word (word, korean, detail_section, difficulty, discrimination, gues
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Sometimes', '가끔', 9999, 3.0550, 1.0, 0.25, '시카모어 (유럽산 단풍나무의 일종)', '몸싸움, 드잡이', '해로운, 유독한');
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Somewhere', '어딘가에(로)', 9999, 3.0550, 1.0, 0.25, '폭풍우', '저음', '얌전한, 차분한');
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Webpage', '웹페이지', 9999, 3.0550, 1.0, 0.25, '육욕적인 애정을 보이는', '언쟁', '격언');
+
+-- Set all words as active (0 = Y, 1 = N in YesNo enum ordinal)
+UPDATE word SET active_yn = 0 WHERE active_yn IS NULL;
+
+-- Set default level for all words
+UPDATE word SET level = 0 WHERE level IS NULL;
+
+-- Set default unknown option for all words
+UPDATE word SET unknown_option = '모르겠습니다' WHERE unknown_option IS NULL;

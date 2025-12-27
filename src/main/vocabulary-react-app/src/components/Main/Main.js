@@ -75,7 +75,7 @@ const Main = ({
 				if (done === true || id === 0) return;
 
 				const response = await axios.get(`/api/irt/exam/${id}/current`);
-				const detail = response.data;
+				const detail = response.data.data || response.data;
 
 				if (detail && detail.word) {
 					const word = detail.word;
@@ -113,8 +113,9 @@ const Main = ({
 			if (counter <= 1 || id === 0) return;
 			try {
 				const res = await axios.get(`/api/irt/exam/${id}/result`);
-				if (res.data && res.data.wordExamDetails) {
-					setExamResult(res.data.wordExamDetails);
+				const resultData = res.data.data || res.data;
+				if (resultData && resultData.wordExamDetails) {
+					setExamResult(resultData.wordExamDetails);
 				}
 			} catch (err) {
 				console.error('Failed to fetch exam result:', err);
@@ -156,7 +157,7 @@ const Main = ({
 					}
 				);
 
-				const submitResult = result.data;
+				const submitResult = result.data.data || result.data;
 				setCurrentTheta(submitResult.currentTheta || submitResult.finalTheta || 0);
 				setStandardError(submitResult.standardError || 1);
 

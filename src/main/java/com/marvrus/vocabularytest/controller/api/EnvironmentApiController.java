@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/environments")
 public class EnvironmentApiController {
-    @Value("${spring.profiles.active}")
+    @Value("${spring.profiles.active:local}")
     private String environment;
 
     @GetMapping("")

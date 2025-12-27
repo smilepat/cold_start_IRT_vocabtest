@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS word (
     option1 VARCHAR(255),
     option2 VARCHAR(255),
     option3 VARCHAR(255),
-    unknown VARCHAR(255) DEFAULT '모르겠습니다',
+    unknown_option VARCHAR(255) DEFAULT '모르겠습니다',
     answer VARCHAR(255),
     active_yn VARCHAR(1) DEFAULT 'Y',
     -- IRT Parameters (3PL Model)
