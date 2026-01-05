@@ -251,10 +251,18 @@ public class IrtCatService {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "문항 정보가 없습니다.");
         }
 
-        return details.stream()
+        WordExamDetail currentDetail = details.stream()
                 .filter(d -> d.getCorrectYn() == null)  // 아직 답안 제출 안 된 문항
                 .findFirst()
                 .orElse(details.get(details.size() - 1));
+
+        // Word 객체가 null이면 명시적으로 로드
+        if (currentDetail.getWord() == null && currentDetail.getWordSeqno() != null) {
+            Word word = wordRepository.findById(currentDetail.getWordSeqno()).orElse(null);
+            currentDetail.setWord(word);
+        }
+
+        return currentDetail;
     }
 
     // === Private Helper Methods ===
