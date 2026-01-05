@@ -97,7 +97,7 @@ function Result({history, examId, seqNo}) {
 			try {
 				const id = examId || seqNo;
 				const response = await axios.get(`/api/irt/exam/${id}/result`);
-				const result = response.data;
+				const result = response.data.data;
 
 				// IRT 결과에서 theta, SE 추출
 				const thetaValue = result.theta || result.finalTheta || 0;

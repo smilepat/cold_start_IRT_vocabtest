@@ -9022,3 +9022,243 @@ UPDATE word SET level = 0 WHERE level IS NULL;
 
 -- Set default unknown option for all words
 UPDATE word SET unknown_option = '모르겠습니다' WHERE unknown_option IS NULL;
+-- =============================================================================
+-- Additional Vocabulary Items for IRT CAT Diagnosis
+-- Various difficulty levels for comprehensive vocabulary assessment
+-- =============================================================================
+
+-- =====================================================
+-- BEGINNER LEVEL (difficulty: -2.5 ~ -1.5)
+-- Elementary & Basic Middle School Vocabulary
+-- =====================================================
+
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Apple', '사과', 10001, -2.45, 1.0, 0.25, '오렌지', '바나나', '포도');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Book', '책', 10002, -2.40, 1.0, 0.25, '펜', '연필', '지우개');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Cat', '고양이', 10003, -2.35, 1.0, 0.25, '강아지', '토끼', '새');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Dog', '개', 10004, -2.30, 1.0, 0.25, '고양이', '물고기', '거북이');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Eat', '먹다', 10005, -2.25, 1.0, 0.25, '마시다', '자다', '걷다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Friend', '친구', 10006, -2.20, 1.0, 0.25, '가족', '선생님', '학생');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Good', '좋은', 10007, -2.15, 1.0, 0.25, '나쁜', '큰', '작은');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Happy', '행복한', 10008, -2.10, 1.0, 0.25, '슬픈', '화난', '피곤한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('House', '집', 10009, -2.05, 1.0, 0.25, '학교', '병원', '공원');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Jump', '점프하다', 10010, -2.00, 1.0, 0.25, '달리다', '걷다', '앉다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Kind', '친절한', 10011, -1.95, 1.0, 0.25, '무례한', '게으른', '시끄러운');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Learn', '배우다', 10012, -1.90, 1.0, 0.25, '가르치다', '잊다', '기억하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Money', '돈', 10013, -1.85, 1.0, 0.25, '시간', '건강', '사랑');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Name', '이름', 10014, -1.80, 1.0, 0.25, '나이', '주소', '전화번호');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Open', '열다', 10015, -1.75, 1.0, 0.25, '닫다', '던지다', '잡다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Play', '놀다', 10016, -1.70, 1.0, 0.25, '일하다', '공부하다', '잠자다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Question', '질문', 10017, -1.65, 1.0, 0.25, '대답', '문제', '해결');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Rain', '비', 10018, -1.60, 1.0, 0.25, '눈', '바람', '태양');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('School', '학교', 10019, -1.55, 1.0, 0.25, '집', '병원', '가게');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Teacher', '선생님', 10020, -1.50, 1.0, 0.25, '학생', '의사', '경찰관');
+
+-- =====================================================
+-- INTERMEDIATE LEVEL (difficulty: -1.5 ~ 0.5)
+-- Middle School & Early High School Vocabulary
+-- =====================================================
+
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Achieve', '성취하다', 10021, -1.45, 1.1, 0.25, '실패하다', '시도하다', '포기하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Benefit', '이익, 혜택', 10022, -1.35, 1.1, 0.25, '손해', '비용', '세금');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Consider', '고려하다', 10023, -1.25, 1.1, 0.25, '무시하다', '거부하다', '결정하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Develop', '발전시키다', 10024, -1.15, 1.1, 0.25, '파괴하다', '유지하다', '중단하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Environment', '환경', 10025, -1.05, 1.1, 0.25, '경제', '정치', '문화');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Factor', '요인', 10026, -0.95, 1.1, 0.25, '결과', '원인', '영향');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Generate', '생성하다', 10027, -0.85, 1.1, 0.25, '소멸시키다', '유지하다', '변경하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Hypothesis', '가설', 10028, -0.75, 1.1, 0.25, '결론', '증거', '실험');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Implement', '실행하다', 10029, -0.65, 1.1, 0.25, '계획하다', '취소하다', '연기하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Justify', '정당화하다', 10030, -0.55, 1.1, 0.25, '비난하다', '의심하다', '무시하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Maintain', '유지하다', 10031, -0.45, 1.1, 0.25, '변경하다', '파괴하다', '무시하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Navigate', '항해하다, 탐색하다', 10032, -0.35, 1.1, 0.25, '표류하다', '정박하다', '침몰하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Obtain', '얻다, 획득하다', 10033, -0.25, 1.1, 0.25, '잃다', '주다', '버리다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Participate', '참여하다', 10034, -0.15, 1.1, 0.25, '관망하다', '거부하다', '이탈하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Require', '요구하다', 10035, -0.05, 1.1, 0.25, '제공하다', '거부하다', '무시하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Significant', '중요한, 의미있는', 10036, 0.05, 1.1, 0.25, '사소한', '일반적인', '평범한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Transform', '변형시키다', 10037, 0.15, 1.1, 0.25, '유지하다', '보존하다', '고정하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Ultimate', '궁극적인', 10038, 0.25, 1.1, 0.25, '초기의', '중간의', '일시적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Verify', '확인하다, 검증하다', 10039, 0.35, 1.1, 0.25, '의심하다', '부정하다', '무시하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Welfare', '복지', 10040, 0.45, 1.1, 0.25, '빈곤', '불평등', '착취');
+
+-- =====================================================
+-- ADVANCED LEVEL (difficulty: 0.5 ~ 2.0)
+-- High School & College Entrance Exam Vocabulary
+-- =====================================================
+
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Abstain', '삼가다, 자제하다', 10041, 0.55, 1.2, 0.25, '탐닉하다', '즐기다', '추구하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Benevolent', '자비로운', 10042, 0.65, 1.2, 0.25, '악의적인', '무관심한', '이기적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Comprehensive', '포괄적인', 10043, 0.75, 1.2, 0.25, '제한적인', '부분적인', '피상적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Deteriorate', '악화되다', 10044, 0.85, 1.2, 0.25, '개선되다', '유지되다', '안정되다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Elaborate', '정교한, 상세한', 10045, 0.95, 1.2, 0.25, '단순한', '조잡한', '대략적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Fluctuate', '변동하다', 10046, 1.05, 1.2, 0.25, '안정되다', '고정되다', '유지되다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Gregarious', '사교적인', 10047, 1.15, 1.2, 0.25, '내성적인', '고독한', '은둔의');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Homogeneous', '동질의', 10048, 1.25, 1.2, 0.25, '이질적인', '다양한', '혼합된');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Impeccable', '흠잡을 데 없는', 10049, 1.35, 1.2, 0.25, '결함있는', '불완전한', '평범한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Juxtapose', '병치하다, 나란히 놓다', 10050, 1.45, 1.2, 0.25, '분리하다', '멀리하다', '숨기다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Lucrative', '수익성 있는', 10051, 1.55, 1.2, 0.25, '손해보는', '무료의', '비싼');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Meticulous', '꼼꼼한, 세심한', 10052, 1.65, 1.2, 0.25, '부주의한', '무관심한', '대충하는');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Negligible', '무시해도 될 정도의', 10053, 1.75, 1.2, 0.25, '상당한', '중요한', '핵심적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Obsolete', '구식의, 쓸모없는', 10054, 1.85, 1.2, 0.25, '최신의', '혁신적인', '현대적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Perpetual', '영구적인', 10055, 1.95, 1.2, 0.25, '일시적인', '순간적인', '한정된');
+
+-- =====================================================
+-- EXPERT LEVEL (difficulty: 2.0 ~ 3.0)
+-- TOEFL/GRE Level Vocabulary
+-- =====================================================
+
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Acquiesce', '마지못해 따르다', 10056, 2.05, 1.3, 0.25, '강력히 반대하다', '적극적으로 거부하다', '열정적으로 지지하다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Bellicose', '호전적인', 10057, 2.15, 1.3, 0.25, '평화로운', '온순한', '우호적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Cacophony', '불협화음', 10058, 2.25, 1.3, 0.25, '조화로운 소리', '아름다운 멜로디', '고요함');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Deleterious', '해로운', 10059, 2.35, 1.3, 0.25, '유익한', '무해한', '건강에 좋은');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Ephemeral', '일시적인, 덧없는', 10060, 2.45, 1.3, 0.25, '영원한', '지속적인', '불멸의');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Fastidious', '까다로운, 꼼꼼한', 10061, 2.55, 1.3, 0.25, '무관심한', '대충하는', '느슨한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Garrulous', '수다스러운', 10062, 2.65, 1.3, 0.25, '과묵한', '조용한', '말이 없는');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Hegemony', '패권', 10063, 2.75, 1.3, 0.25, '복종', '종속', '약세');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Iconoclast', '인습 타파자', 10064, 2.85, 1.3, 0.25, '전통주의자', '보수주의자', '순응주의자');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Juggernaut', '막강한 힘', 10065, 2.95, 1.3, 0.25, '약한 존재', '무력한 것', '취약점');
+
+-- =====================================================
+-- ADDITIONAL VARIED VOCABULARY
+-- Mixed Difficulty for Better Calibration
+-- =====================================================
+
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Ambiguous', '모호한', 10066, 1.10, 1.15, 0.25, '명확한', '분명한', '확실한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Brevity', '간결함', 10067, 1.50, 1.15, 0.25, '장황함', '복잡함', '길이');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Candid', '솔직한', 10068, 0.90, 1.15, 0.25, '기만적인', '숨기는', '위선적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Dubious', '의심스러운', 10069, 1.20, 1.15, 0.25, '확실한', '신뢰할 수 있는', '믿을 만한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Eloquent', '웅변의, 유창한', 10070, 1.40, 1.15, 0.25, '말을 더듬는', '서툰', '어눌한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Feasible', '실현 가능한', 10071, 0.80, 1.15, 0.25, '불가능한', '비현실적인', '이상적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Gratuitous', '불필요한, 무료의', 10072, 1.80, 1.15, 0.25, '필수적인', '유료의', '정당한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Heinous', '극악무도한', 10073, 2.10, 1.15, 0.25, '훌륭한', '덕이 있는', '칭찬받을 만한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Imminent', '임박한', 10074, 1.00, 1.15, 0.25, '먼', '불확실한', '가능성 낮은');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Judicious', '현명한', 10075, 1.60, 1.15, 0.25, '어리석은', '무분별한', '경솔한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Kinetic', '운동의', 10076, 1.30, 1.15, 0.25, '정적인', '고정된', '움직이지 않는');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Lethargic', '무기력한', 10077, 1.70, 1.15, 0.25, '활기찬', '정력적인', '활동적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Mundane', '평범한, 세속적인', 10078, 1.45, 1.15, 0.25, '특별한', '신성한', '비범한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Novice', '초보자', 10079, 0.60, 1.15, 0.25, '전문가', '숙련자', '베테랑');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Ominous', '불길한', 10080, 1.55, 1.15, 0.25, '상서로운', '희망찬', '긍정적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Pragmatic', '실용적인', 10081, 1.25, 1.15, 0.25, '이상주의적인', '비현실적인', '공상적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Quintessential', '전형적인', 10082, 2.00, 1.15, 0.25, '비정상적인', '특이한', '예외적인');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Resilient', '회복력 있는', 10083, 1.35, 1.15, 0.25, '취약한', '약한', '허약한');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Scrutinize', '면밀히 조사하다', 10084, 1.65, 1.15, 0.25, '무시하다', '대충 보다', '지나치다');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES
+('Tenacious', '끈질긴', 10085, 1.75, 1.15, 0.25, '포기하는', '나약한', '변덕스러운');
+
+-- =====================================================
+-- CONTEXTUAL VOCABULARY (with example sentences)
+-- Real-world usage examples
+-- =====================================================
+
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Abundant', '풍부한', 10086, 0.70, 1.1, 0.25, '부족한', '드문', '희소한', 'The forest was abundant with wildlife.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Collaborate', '협력하다', 10087, 0.50, 1.1, 0.25, '경쟁하다', '반대하다', '방해하다', 'The two companies decided to collaborate on the project.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Diminish', '줄이다, 감소시키다', 10088, 0.85, 1.1, 0.25, '증가시키다', '확대하다', '강화하다', 'Nothing could diminish her enthusiasm.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Enhance', '향상시키다', 10089, 0.40, 1.1, 0.25, '악화시키다', '손상시키다', '약화시키다', 'The new software will enhance productivity.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Facilitate', '용이하게 하다', 10090, 1.05, 1.1, 0.25, '방해하다', '복잡하게 하다', '지연시키다', 'The new bridge will facilitate travel between the two cities.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Genuine', '진짜의, 진정한', 10091, 0.30, 1.1, 0.25, '가짜의', '위조된', '거짓된', 'Her concern for others was genuine.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Hinder', '방해하다', 10092, 0.95, 1.1, 0.25, '돕다', '촉진하다', '지원하다', 'Bad weather hindered the rescue efforts.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Initiate', '시작하다, 착수하다', 10093, 0.55, 1.1, 0.25, '끝내다', '중단하다', '종료하다', 'The company initiated a new training program.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Jeopardize', '위험에 빠뜨리다', 10094, 1.85, 1.1, 0.25, '보호하다', '안전하게 하다', '지키다', 'His reckless behavior could jeopardize the mission.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Mitigate', '완화하다', 10095, 1.90, 1.1, 0.25, '악화시키다', '증폭시키다', '심화시키다', 'Steps were taken to mitigate the effects of the disaster.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Nurture', '양육하다, 키우다', 10096, 0.75, 1.1, 0.25, '방치하다', '무시하다', '버리다', 'Parents nurture their children with love and care.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Persist', '지속하다, 고집하다', 10097, 0.65, 1.1, 0.25, '포기하다', '그만두다', '중단하다', 'Despite difficulties, she persisted in her efforts.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Reluctant', '꺼리는, 마지못한', 10098, 0.45, 1.1, 0.25, '열망하는', '기꺼이 하는', '적극적인', 'He was reluctant to share his personal information.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Sustain', '유지하다, 지탱하다', 10099, 0.60, 1.1, 0.25, '파괴하다', '끝내다', '멈추다', 'The economy needs investment to sustain growth.');
+INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3, example_sentence) VALUES
+('Versatile', '다재다능한', 10100, 1.15, 1.1, 0.25, '한정된', '제한적인', '단일한', 'She is a versatile actress who can play any role.');

@@ -22,11 +22,11 @@ function App() {
 			try {
 				const result = await axios.post(`/api/irt/exam/start`, {});
 				if (!completed.current) {
-					const exam = result.data;
+					const exam = result.data.data;
 					setExamId(exam.wordExamSeqno);
 					setExamData(exam);
 				}
-				console.log('IRT CAT exam started:', result.data);
+				console.log('IRT CAT exam started:', result.data.data);
 			} catch (error) {
 				console.error('Failed to start exam:', error);
 			}

@@ -19,7 +19,18 @@
       "Bash(tree:*)",
       "Bash(cmd /c \"mkdir \"\"c:\\\\Users\\\\user\\\\mydrive\\\\irt-cat-vocabulary-app\"\" 2>nul\")",
       "Bash(cmd /c \"mkdir \"\"D:\\\\irt-cat-vocabulary-app\"\" 2>nul\")",
-      "Bash(cmd /c \"xcopy \"\"c:\\\\Users\\\\user\\\\mydrive\\\\01.cat-vocabulary-test\\\\irt-cat-vocabulary-test\\\\*\"\" \"\"D:\\\\irt-cat-vocabulary-app\"\"\" /E /I /Y \")"
+      "Bash(cmd /c \"xcopy \"\"c:\\\\Users\\\\user\\\\mydrive\\\\01.cat-vocabulary-test\\\\irt-cat-vocabulary-test\\\\*\"\" \"\"D:\\\\irt-cat-vocabulary-app\"\"\" /E /I /Y \")",
+      "Bash(mvnw.cmd spring-boot:run:*)",
+      "Bash(npm start)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(npm install:*)",
+      "Bash(./mvnw spring-boot:run:*)",
+      "Bash(curl:*)",
+      "Bash(rm:*)",
+      "Bash(cat:*)",
+      "Bash(export JAVA_HOME=\"C:/Program Files/Eclipse Adoptium/jdk-11.0.28.6-hotspot\")",
+      "Bash(./mvnw.cmd spring-boot:run:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

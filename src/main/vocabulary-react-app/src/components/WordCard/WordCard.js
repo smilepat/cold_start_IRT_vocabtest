@@ -60,7 +60,7 @@ const WordCard = ({
 			try {
 				// Fetch exam result from IRT CAT API
 				const res = await axios.get(`/api/irt/exam/${seqNo}/result`);
-				const examData = res.data;
+				const examData = res.data.data;
 				const examDetails = examData.wordExamDetails || [];
 
 				if (examDetails.length === 0) {
