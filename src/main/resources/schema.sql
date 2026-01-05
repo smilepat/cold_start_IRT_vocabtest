@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS word_exam_detail (
     word_exam_seqno BIGINT NOT NULL,
     exam_order INT,
     word_seqno BIGINT,
+    word_seqno_low_limit BIGINT DEFAULT NULL,
+    word_seqno_high_limit BIGINT DEFAULT NULL,
     answer VARCHAR(255),
     correct_yn VARCHAR(1),
     -- IRT Tracking

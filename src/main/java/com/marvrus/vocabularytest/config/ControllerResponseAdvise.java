@@ -17,6 +17,10 @@ public class ControllerResponseAdvise implements ResponseBodyAdvice {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+        // Skip wrapping if already wrapped in ApiResponse (check both classes)
+        if (body instanceof ApiResponse || body instanceof com.marvrus.vocabularytest.model.dto.ApiResponse) {
+            return body;
+        }
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setSuccess(true);
         apiResponse.setData(body);
