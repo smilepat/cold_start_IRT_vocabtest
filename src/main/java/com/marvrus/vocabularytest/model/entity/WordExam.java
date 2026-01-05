@@ -35,6 +35,7 @@ public class WordExam {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime examEndDt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "exam_done_yn")
     @ApiModelProperty("어휘력테스트 완료여부")
     private YesNo examDoneYn;

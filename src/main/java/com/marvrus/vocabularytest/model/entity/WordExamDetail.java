@@ -36,6 +36,7 @@ public class WordExamDetail {
     @Column(name = "answer")
     private String answer;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "correct_yn")
     private YesNo correctYn;
 

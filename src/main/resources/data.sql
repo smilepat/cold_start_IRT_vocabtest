@@ -9014,8 +9014,8 @@ INSERT INTO word (word, korean, detail_section, difficulty, discrimination, gues
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Somewhere', '어딘가에(로)', 9999, 3.0550, 1.0, 0.25, '폭풍우', '저음', '얌전한, 차분한');
 INSERT INTO word (word, korean, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Webpage', '웹페이지', 9999, 3.0550, 1.0, 0.25, '육욕적인 애정을 보이는', '언쟁', '격언');
 
--- Set all words as active (0 = Y, 1 = N in YesNo enum ordinal)
-UPDATE word SET active_yn = 0 WHERE active_yn IS NULL;
+-- Set all words as active ('Y' = Yes, 'N' = No)
+UPDATE word SET active_yn = 'Y' WHERE active_yn IS NULL;
 
 -- Set default level for all words
 UPDATE word SET level = 0 WHERE level IS NULL;

@@ -51,6 +51,7 @@ public class Word {
     @Column(name = "answer")
     private String answer;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "active_yn")
     private YesNo activeYn;
 
