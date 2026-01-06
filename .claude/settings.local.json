@@ -31,7 +31,8 @@
       "Bash(export JAVA_HOME=\"C:/Program Files/Eclipse Adoptium/jdk-11.0.28.6-hotspot\")",
       "Bash(./mvnw.cmd spring-boot:run:*)",
       "Bash(npm run build:*)",
-      "Bash(tasklist /FI \"IMAGENAME eq java.exe\" /FO CSV)"
+      "Bash(tasklist /FI \"IMAGENAME eq java.exe\" /FO CSV)",
+      "Bash(node update-levels.js:*)"
     ]
   }
 }
