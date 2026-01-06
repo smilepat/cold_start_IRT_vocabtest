@@ -8489,7 +8489,7 @@ INSERT INTO word (word, korean, level, detail_section, difficulty, discriminatio
 INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Pipette', '피펫', 9, 8500, 2.2222, 1.0, 0.25, '나눌 수 없는', '보아뱀', '메스키트');
 INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Rejoinder', '응수, 답변', 9, 8501, 2.2228, 1.0, 0.25, '징크스', '(악곡, 악장 등의) 종결부', '(문법) 대명사의');
 INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Sanctimonious', '신성한체하는', 9, 8502, 2.2233, 1.0, 0.25, '마카로니', '여자 이름', '등신');
-INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Valium', '발륨''', 8503, 2.2239, 1.0, 0.25, '판테온신', '경험주의자', '꾸물');
+INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Valium', '발륨', 9, 8503, 2.2239, 1.0, 0.25, '판테온신', '경험주의자', '꾸물');
 INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Visage', '얼굴', 9, 8504, 2.2244, 1.0, 0.25, '플라스미드', '오두막집', '집게발');
 INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Abashed', '부끄러워', 9, 8505, 2.2250, 1.0, 0.25, '펜치', '조직 폭력배', '은가되다');
 INSERT INTO word (word, korean, level, detail_section, difficulty, discrimination, guessing, option1, option2, option3) VALUES ('Aglow', '빛나는', 9, 8506, 2.2256, 1.0, 0.25, '(영화, 텔레비전 프로그램 등을) 패러디한 것', '(사내)겁이많은', '지로');

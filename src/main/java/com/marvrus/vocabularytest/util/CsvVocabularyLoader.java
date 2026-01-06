@@ -74,7 +74,9 @@ public class CsvVocabularyLoader implements CommandLineRunner {
                 Word word = new Word();
                 word.setWord(w);
                 word.setKorean(kor);
-                word.setDetailSection(section);
+                if (section != null) {
+                    word.setDetailSection(section);
+                }
                 // initialize IRT params (frequency-based difficulty)
                 if (section != null) {
                     double maxRank = 9000.0;
