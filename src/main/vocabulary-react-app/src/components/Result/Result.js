@@ -11,6 +11,16 @@ import Button from '@material-ui/core/Button';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import SchoolIcon from '@material-ui/icons/School';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import Divider from '@material-ui/core/Divider';
 
 import useStyles from './style';
 import styles from './Result.module.css';
@@ -86,6 +96,44 @@ const thetaToVocabCount = (theta) => {
 	return Math.max(0, Math.min(9000, Math.round(normalized * 9000)));
 };
 
+// 학습 계획 생성 함수
+const generateStudyPlan = (currentLevel, targetLevel, wordsPerLevel = 100) => {
+	const plans = [];
+	const levelsToStudy = targetLevel - currentLevel;
+
+	if (levelsToStudy <= 0) {
+		return [{
+			phase: 1,
+			title: '현재 레벨 복습',
+			level: currentLevel,
+			levelName: getLevelText(currentLevel - 1),
+			words: wordsPerLevel,
+			dailyWords: 10,
+			days: Math.ceil(wordsPerLevel / 10),
+			description: '현재 레벨의 어휘를 완벽히 마스터하세요.'
+		}];
+	}
+
+	for (let i = 0; i < levelsToStudy; i++) {
+		const studyLevel = currentLevel + i + 1;
+		plans.push({
+			phase: i + 1,
+			title: `${i + 1}단계: ${getLevelText(studyLevel - 1)}`,
+			level: studyLevel,
+			levelName: getLevelText(studyLevel - 1),
+			words: wordsPerLevel,
+			dailyWords: 10,
+			days: Math.ceil(wordsPerLevel / 10),
+			weeks: Math.ceil(wordsPerLevel / 10 / 7),
+			description: i === 0
+				? '먼저 이 레벨부터 시작하세요!'
+				: `${getLevelText(studyLevel - 2)} 완료 후 진행하세요.`
+		});
+	}
+
+	return plans;
+};
+
 function Result({history, examId, seqNo}) {
 	const [level, setLevel] = useState(0);
 	const [vocabCount, setVocabCount] = useState(0);
@@ -94,6 +142,10 @@ function Result({history, examId, seqNo}) {
 	const [goalModalOpen, setGoalModalOpen] = useState(false);
 	const [selectedGoalLevel, setSelectedGoalLevel] = useState(1);
 	const [maxLevel, setMaxLevel] = useState(9);
+	const [menuOpen, setMenuOpen] = useState(false);
+	const [studyPlanModalOpen, setStudyPlanModalOpen] = useState(false);
+	const [studyPlanTarget, setStudyPlanTarget] = useState(9);
+	const [wordCounts, setWordCounts] = useState({});
 
 	const level1 = level;
 	const levelStr = `${Math.max(0, vocabCount - 500)} ~ ${vocabCount}개`;
@@ -138,6 +190,25 @@ function Result({history, examId, seqNo}) {
 		fetchMaxLevel();
 	}, [examId, seqNo]);
 
+	// 레벨별 단어 수 가져오기
+	useEffect(() => {
+		const fetchWordCounts = async () => {
+			const counts = {};
+			for (let lvl = 1; lvl <= maxLevel; lvl++) {
+				try {
+					const res = await axios.get(`/api/irt/words/level/${lvl}`);
+					counts[lvl] = res.data.data?.length || 100;
+				} catch (err) {
+					counts[lvl] = 100;
+				}
+			}
+			setWordCounts(counts);
+		};
+		if (maxLevel > 0) {
+			fetchWordCounts();
+		}
+	}, [maxLevel]);
+
 	const handleStudyClick = () => {
 		setGoalModalOpen(true);
 		setStudyButtonType('clicked');
@@ -153,11 +224,89 @@ function Result({history, examId, seqNo}) {
 		setStudyButtonType('default');
 	};
 
+	const handleMenuOpen = () => {
+		setMenuOpen(true);
+	};
+
+	const handleMenuClose = () => {
+		setMenuOpen(false);
+	};
+
+	const handleStudyPlanOpen = () => {
+		setStudyPlanTarget(maxLevel);
+		setStudyPlanModalOpen(true);
+		setMenuOpen(false);
+	};
+
+	const handleStudyPlanClose = () => {
+		setStudyPlanModalOpen(false);
+	};
+
+	const studyPlans = generateStudyPlan(level1, studyPlanTarget, wordCounts[level1 + 1] || 100);
+	const totalDays = studyPlans.reduce((sum, plan) => sum + (wordCounts[plan.level] ? Math.ceil(wordCounts[plan.level] / 10) : plan.days), 0);
+	const totalWeeks = Math.ceil(totalDays / 7);
+
 	return (
 		<div className={classes.resultWrapper}>
 			<div className={classes.navWrapper}>
 				<div className={styles.navText}>VOCABULARY TEST RESULT</div>
+				{/* 메뉴 버튼 */}
+				<IconButton
+					onClick={handleMenuOpen}
+					style={{
+						position: 'absolute',
+						right: '3rem',
+						top: '4rem',
+						backgroundColor: 'white',
+						boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+					}}
+				>
+					<MenuIcon style={{ fontSize: '3rem', color: '#68c8c7' }} />
+				</IconButton>
 			</div>
+
+			{/* 사이드 메뉴 Drawer */}
+			<Drawer anchor="right" open={menuOpen} onClose={handleMenuClose}>
+				<div style={{ width: '300px', padding: '1rem' }}>
+					<div style={{
+						backgroundColor: '#68c8c7',
+						color: 'white',
+						padding: '2rem',
+						marginBottom: '1rem',
+						borderRadius: '8px',
+						textAlign: 'center'
+					}}>
+						<SchoolIcon style={{ fontSize: '4rem' }} />
+						<div style={{ fontSize: '1.8rem', fontWeight: 'bold', marginTop: '0.5rem' }}>
+							학습 메뉴
+						</div>
+						<div style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>
+							현재 레벨: {getLevelText(level1)}
+						</div>
+					</div>
+					<Divider />
+					<List>
+						<ListItem button onClick={handleStudyPlanOpen}>
+							<ListItemIcon>
+								<TimelineIcon style={{ fontSize: '2.5rem', color: '#68c8c7' }} />
+							</ListItemIcon>
+							<ListItemText
+								primary={<span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>학습 계획 보기</span>}
+								secondary={<span style={{ fontSize: '1.1rem' }}>목표까지의 학습 로드맵</span>}
+							/>
+						</ListItem>
+						<ListItem button onClick={() => { setMenuOpen(false); handleStudyClick(); }}>
+							<ListItemIcon>
+								<SchoolIcon style={{ fontSize: '2.5rem', color: '#68c8c7' }} />
+							</ListItemIcon>
+							<ListItemText
+								primary={<span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>학습 시작</span>}
+								secondary={<span style={{ fontSize: '1.1rem' }}>목표 레벨 선택 후 학습</span>}
+							/>
+						</ListItem>
+					</List>
+				</div>
+			</Drawer>
 			<div className={classes.resultBodyWrapper}>
 				<div className={classes.resultSteps}>
 					<Steps />
@@ -386,6 +535,193 @@ function Result({history, examId, seqNo}) {
 									}}
 								>
 									학습 시작
+								</Button>
+							</DialogActions>
+						</Dialog>
+
+						{/* 학습 계획 모달 */}
+						<Dialog
+							open={studyPlanModalOpen}
+							onClose={handleStudyPlanClose}
+							maxWidth="md"
+							fullWidth
+						>
+							<DialogTitle style={{ backgroundColor: '#68c8c7', color: 'white', textAlign: 'center' }}>
+								<TimelineIcon style={{ fontSize: '2.5rem', verticalAlign: 'middle', marginRight: '0.5rem' }} />
+								맞춤 학습 계획
+							</DialogTitle>
+							<DialogContent style={{ padding: '2rem' }}>
+								{/* 현재 상태 요약 */}
+								<div style={{
+									backgroundColor: '#f5f5f5',
+									padding: '1.5rem',
+									borderRadius: '12px',
+									marginBottom: '2rem',
+									textAlign: 'center'
+								}}>
+									<div style={{ fontSize: '1.3rem', color: '#666', marginBottom: '0.5rem' }}>
+										현재 어휘 수준
+									</div>
+									<div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#68c8c7' }}>
+										Level {level1} - {getLevelText(level1)}
+									</div>
+									<div style={{ fontSize: '1.2rem', color: '#888', marginTop: '0.5rem' }}>
+										예상 어휘: {levelStr}
+									</div>
+								</div>
+
+								{/* 목표 레벨 선택 */}
+								<div style={{ marginBottom: '2rem' }}>
+									<div style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+										목표 레벨 설정
+									</div>
+									<RadioGroup
+										row
+										value={studyPlanTarget.toString()}
+										onChange={(e) => setStudyPlanTarget(parseInt(e.target.value))}
+										style={{ justifyContent: 'center', gap: '0.5rem' }}
+									>
+										{Array.from({ length: maxLevel - level1 }, (_, i) => level1 + i + 1).map((lvl) => (
+											<FormControlLabel
+												key={lvl}
+												value={lvl.toString()}
+												control={<Radio color="primary" size="small" />}
+												label={<span style={{ fontSize: '1.1rem' }}>Lv.{lvl}</span>}
+												style={{
+													backgroundColor: studyPlanTarget === lvl ? '#e8f5f5' : '#f9f9f9',
+													borderRadius: '8px',
+													padding: '0.3rem 0.8rem',
+													margin: '0.2rem'
+												}}
+											/>
+										))}
+									</RadioGroup>
+								</div>
+
+								{/* 학습 계획 상세 */}
+								<div style={{ marginBottom: '1rem' }}>
+									<div style={{
+										fontSize: '1.4rem',
+										fontWeight: 'bold',
+										marginBottom: '1rem',
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'space-between'
+									}}>
+										<span>학습 로드맵</span>
+										<span style={{ fontSize: '1.1rem', color: '#68c8c7' }}>
+											총 {totalDays}일 (약 {totalWeeks}주)
+										</span>
+									</div>
+
+									<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+										{studyPlans.map((plan, index) => (
+											<div
+												key={plan.phase}
+												style={{
+													backgroundColor: index === 0 ? '#e8f5f5' : '#fafafa',
+													border: index === 0 ? '2px solid #68c8c7' : '1px solid #eee',
+													borderRadius: '12px',
+													padding: '1.5rem',
+													position: 'relative'
+												}}
+											>
+												{index === 0 && (
+													<div style={{
+														position: 'absolute',
+														top: '-10px',
+														left: '20px',
+														backgroundColor: '#68c8c7',
+														color: 'white',
+														padding: '2px 12px',
+														borderRadius: '10px',
+														fontSize: '1rem'
+													}}>
+														시작!
+													</div>
+												)}
+												<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+													<div>
+														<div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#333' }}>
+															{plan.title}
+														</div>
+														<div style={{ fontSize: '1.1rem', color: '#666', marginTop: '0.3rem' }}>
+															{plan.description}
+														</div>
+													</div>
+													<div style={{ textAlign: 'right' }}>
+														<div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#68c8c7' }}>
+															{wordCounts[plan.level] || plan.words}개 단어
+														</div>
+														<div style={{ fontSize: '1rem', color: '#888' }}>
+															하루 {plan.dailyWords}개 / {Math.ceil((wordCounts[plan.level] || plan.words) / 10)}일
+														</div>
+													</div>
+												</div>
+												<Button
+													variant="outlined"
+													size="small"
+													style={{
+														marginTop: '1rem',
+														borderColor: '#68c8c7',
+														color: '#68c8c7',
+														fontSize: '1rem'
+													}}
+													onClick={() => {
+														setStudyPlanModalOpen(false);
+														history.push(`/wordcard?level=${plan.level}`);
+													}}
+												>
+													이 레벨 학습하기
+												</Button>
+											</div>
+										))}
+									</div>
+								</div>
+
+								{/* 학습 팁 */}
+								<div style={{
+									backgroundColor: '#fff9e6',
+									padding: '1rem 1.5rem',
+									borderRadius: '8px',
+									borderLeft: '4px solid #ffc107',
+									marginTop: '1.5rem'
+								}}>
+									<div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#856404', marginBottom: '0.5rem' }}>
+										학습 팁
+									</div>
+									<ul style={{ margin: 0, paddingLeft: '1.5rem', fontSize: '1.1rem', color: '#666' }}>
+										<li>매일 꾸준히 10개씩 학습하세요</li>
+										<li>카드를 뒤집어 뜻을 확인하며 암기하세요</li>
+										<li>이전 레벨 복습도 함께 진행하면 효과적입니다</li>
+									</ul>
+								</div>
+							</DialogContent>
+							<DialogActions style={{ padding: '1rem 2rem', justifyContent: 'center' }}>
+								<Button
+									onClick={handleStudyPlanClose}
+									style={{
+										fontSize: '1.2rem',
+										padding: '0.8rem 2rem',
+										color: '#666'
+									}}
+								>
+									닫기
+								</Button>
+								<Button
+									onClick={() => {
+										setStudyPlanModalOpen(false);
+										history.push(`/wordcard?level=${level1 + 1}`);
+									}}
+									variant="contained"
+									style={{
+										fontSize: '1.2rem',
+										padding: '0.8rem 2rem',
+										backgroundColor: '#68c8c7',
+										color: 'white'
+									}}
+								>
+									첫 단계 학습 시작
 								</Button>
 							</DialogActions>
 						</Dialog>
