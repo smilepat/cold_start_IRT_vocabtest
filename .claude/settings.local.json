@@ -33,7 +33,8 @@
       "Bash(npm run build:*)",
       "Bash(tasklist /FI \"IMAGENAME eq java.exe\" /FO CSV)",
       "Bash(node update-levels.js:*)",
-      "Bash(set \"JAVA_HOME=C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-11.0.28.6-hotspot\")"
+      "Bash(set \"JAVA_HOME=C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-11.0.28.6-hotspot\")",
+      "Bash(powershell:*)"
     ]
   }
 }
