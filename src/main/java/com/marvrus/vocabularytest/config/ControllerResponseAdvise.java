@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice(basePackages = "com.marvrus.vocabularytest.controller.api")
-public class ControllerResponseAdvise implements ResponseBodyAdvice {
+public class ControllerResponseAdvise implements ResponseBodyAdvice<Object> {
     @Override
-    public boolean supports(MethodParameter returnType, Class converterType) {
+    public boolean supports(MethodParameter returnType, Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
-                                  Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+                                  Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         // Skip wrapping if already wrapped in ApiResponse (check both classes)
         if (body instanceof ApiResponse || body instanceof com.marvrus.vocabularytest.model.dto.ApiResponse) {
             return body;
