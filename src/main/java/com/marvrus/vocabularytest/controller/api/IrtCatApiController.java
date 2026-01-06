@@ -2,8 +2,10 @@ package com.marvrus.vocabularytest.controller.api;
 
 import com.marvrus.vocabularytest.model.dto.ApiResponse;
 import com.marvrus.vocabularytest.model.dto.irt.SubmitResult;
+import com.marvrus.vocabularytest.model.entity.Word;
 import com.marvrus.vocabularytest.model.entity.WordExam;
 import com.marvrus.vocabularytest.model.entity.WordExamDetail;
+import com.marvrus.vocabularytest.repository.WordRepository;
 import com.marvrus.vocabularytest.service.irt.CalibrationService;
 import com.marvrus.vocabularytest.service.irt.IrtCatService;
 import io.swagger.annotations.Api;
@@ -33,6 +35,9 @@ public class IrtCatApiController {
 
     @Autowired
     private CalibrationService calibrationService;
+
+    @Autowired
+    private WordRepository wordRepository;
 
     /**
      * 시험 시작
@@ -150,5 +155,29 @@ public class IrtCatApiController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getCalibrationStats() {
         Map<String, Object> stats = calibrationService.getCalibrationStats();
         return ResponseEntity.ok(ApiResponse.success(stats));
+    }
+
+    /**
+     * 레벨별 단어 목록 조회
+     * 학습을 위한 특정 레벨의 단어 목록 조회
+     */
+    @GetMapping("/words/level/{level}")
+    @ApiOperation(value = "레벨별 단어 조회", notes = "특정 레벨의 단어 목록을 조회합니다.")
+    public ResponseEntity<ApiResponse<java.util.List<Word>>> getWordsByLevel(
+            @ApiParam(value = "레벨 (1-9)", required = true)
+            @PathVariable int level) {
+        logger.info("Fetching words for level: {}", level);
+        java.util.List<Word> words = wordRepository.findAllByLevel(level);
+        return ResponseEntity.ok(ApiResponse.success(words));
+    }
+
+    /**
+     * 최대 레벨 조회
+     */
+    @GetMapping("/words/max-level")
+    @ApiOperation(value = "최대 레벨 조회", notes = "사용 가능한 최대 레벨을 조회합니다.")
+    public ResponseEntity<ApiResponse<Integer>> getMaxLevel() {
+        int maxLevel = wordRepository.getMaxLevel();
+        return ResponseEntity.ok(ApiResponse.success(maxLevel));
     }
 }

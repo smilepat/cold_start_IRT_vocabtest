@@ -1,8 +1,7 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import axios from "../../axios/axios"
-import {withRouter} from 'react-router-dom'
-import {useMediaQuery} from 'react-responsive'
+import {withRouter, useLocation} from 'react-router-dom'
 
 import styles from './WordCard.module.css';
 
@@ -23,6 +22,14 @@ import prevBtnHover from 'Images/WordCard/prev_btn_hover.png';
 import prevBtnNormal from 'Images/WordCard/prev_btn_normal.png';
 import ReactCardFlip from 'react-card-flip';
 
+// 레벨별 텍스트 매핑
+const LEVEL_TEXT_MAP = [
+	'초등 기본', '초등 완성', '중등 기본', '중등 발전', '중등 완성',
+	'고등 기본', '고등 발전', '수능 완성', 'voca master'
+];
+
+const getLevelText = (level) => LEVEL_TEXT_MAP[level - 1] || 'voca master';
+
 const WordCard = ({
 		history,
 		seqNo,
@@ -31,11 +38,9 @@ const WordCard = ({
 		handleClose
 	}) => {
 
-	//const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1224px)' })
-	//const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
-	//const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-	//const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
-	//const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
+	const location = useLocation();
+	const queryParams = new URLSearchParams(location.search);
+	const targetLevel = parseInt(queryParams.get('level')) || 0;
 
 	const [nextBtn, setNextbtn] = useState('default');
 	const [prevBtn, setPrevbtn] = useState('default');
@@ -51,14 +56,59 @@ const WordCard = ({
 	const [uiCardBack, setUiCardBack] = useState('');
 	const [currentWord, setCurrentWord] = useState('');
 	const [previousWord, setPreviousWord] = useState('');
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [studyLevel, setStudyLevel] = useState(0);
 
 	useEffect(() => {
-		const handleFetchResult = async () => {
-
+		const fetchWordsByLevel = async () => {
 			setOpenLoading(true);
 
 			try {
-				// Fetch exam result from IRT CAT API
+				// 레벨 기반으로 단어 가져오기
+				const res = await axios.get(`/api/irt/words/level/${targetLevel}`);
+				const wordsData = res.data.data || [];
+
+				if (wordsData.length === 0) {
+					console.warn('No words found for level:', targetLevel);
+					alert(`레벨 ${targetLevel}에 해당하는 단어가 없습니다.`);
+					setOpenLoading(false);
+					return;
+				}
+
+				// 단어 목록 섞기
+				const shuffledWords = wordsData
+					.map(w => ({
+						word: w.word,
+						meaning: w.korean || w.meaning,
+						wordSeqno: w.wordSeqno
+					}))
+					.sort(() => Math.random() - 0.5);
+
+				setCardWords(shuffledWords);
+				setStudyLevel(targetLevel);
+				setCurrentIndex(0);
+
+				const firstWord = shuffledWords[0];
+				setCurrentWord(firstWord);
+				setPreviousWord(firstWord);
+				setUiCardWord(firstWord.word);
+				setUiCardBack(firstWord.word);
+
+				console.log(`Loaded ${shuffledWords.length} words for level ${targetLevel}`);
+
+			} catch (err) {
+				console.error('Failed to fetch words by level:', err);
+				alert('단어를 불러오는데 실패했습니다.');
+			}
+
+			setOpenLoading(false);
+		};
+
+		const fetchExamWords = async () => {
+			setOpenLoading(true);
+
+			try {
+				// 기존 시험 결과에서 단어 가져오기
 				const res = await axios.get(`/api/irt/exam/${seqNo}/result`);
 				const examData = res.data.data;
 				const examDetails = examData.wordExamDetails || [];
@@ -69,7 +119,6 @@ const WordCard = ({
 					return;
 				}
 
-				// Extract words from exam details for card study
 				const words = examDetails
 					.filter(detail => detail.word)
 					.map(detail => ({
@@ -85,12 +134,13 @@ const WordCard = ({
 				}
 
 				setCardWords(words);
-				const initIndex = Math.floor(Math.random() * words.length);
+				setCurrentIndex(0);
 
-				setCurrentWord(words[initIndex]);
-				setPreviousWord(words[initIndex]);
-				setUiCardWord(words[initIndex].word);
-				setUiCardBack(words[initIndex].word);
+				const firstWord = words[0];
+				setCurrentWord(firstWord);
+				setPreviousWord(firstWord);
+				setUiCardWord(firstWord.word);
+				setUiCardBack(firstWord.word);
 
 			} catch (err) {
 				console.error('Failed to fetch exam result:', err);
@@ -100,11 +150,14 @@ const WordCard = ({
 			setOpenLoading(false);
 		};
 
-		if (seqNo && seqNo > 0) {
-			handleFetchResult();
+		// 레벨이 지정되면 레벨 기반으로, 아니면 시험 결과에서 가져오기
+		if (targetLevel > 0) {
+			fetchWordsByLevel();
+		} else if (seqNo && seqNo > 0) {
+			fetchExamWords();
 		}
 
-	}, [seqNo]);
+	}, [targetLevel, seqNo]);
 
 	/*
 	useEffect(() => {
@@ -151,16 +204,17 @@ const WordCard = ({
 		e.preventDefault();
 		setNextbtn('clicked');
 
-		var index = Math.floor(Math.random() * cardWords.length);
-		var word = cardWords[index];
-
-		if (word.word.localeCompare(previousWord.word) === 0) {
-			index = Math.floor(Math.random() * cardWords.length);
-			word = cardWords[index];
+		if (cardWords.length === 0) {
+			setNextbtn('default');
+			return;
 		}
 
-		setCurrentWord(word);
+		const nextIndex = (currentIndex + 1) % cardWords.length;
+		const word = cardWords[nextIndex];
+
+		setCurrentIndex(nextIndex);
 		setPreviousWord(currentWord);
+		setCurrentWord(word);
 		setUiCardWord(word.word);
 
 		setFlippedWord(!isFlippedWord);
@@ -173,19 +227,18 @@ const WordCard = ({
 		e.preventDefault();
 		setPrevbtn('clicked');
 
-		var index = Math.floor(Math.random() * cardWords.length);
-		var word = cardWords[index];
-
-		if (word.word.localeCompare(previousWord.word) === 0) {
-			index = Math.floor(Math.random() * cardWords.length);
-			word = cardWords[index];
+		if (cardWords.length === 0) {
+			setPrevbtn('default');
+			return;
 		}
 
-		setCurrentWord(word);
-		setPreviousWord(currentWord);
-		setUiCardWord(word.word);
+		const prevIndex = currentIndex === 0 ? cardWords.length - 1 : currentIndex - 1;
+		const word = cardWords[prevIndex];
 
-		if (isFlippedWord)
+		setCurrentIndex(prevIndex);
+		setPreviousWord(currentWord);
+		setCurrentWord(word);
+		setUiCardWord(word.word);
 
 		setFlippedWord(!isFlippedWord);
 		setFlippedVertical(false);
@@ -213,7 +266,11 @@ const WordCard = ({
 			alignItems="center"
 			justify="center">
 			<Grid className={styles.navWrapper}>
-				<Grid className={styles.navText}>VOCABULARY TEST</Grid>
+				<Grid className={styles.navText}>
+					{studyLevel > 0
+						? `VOCABULARY STUDY - Level ${studyLevel} (${getLevelText(studyLevel)})`
+						: 'VOCABULARY STUDY'}
+				</Grid>
 				<Grid className={styles.modalWrapper}>
 					<img
 						src={quitBtn}
@@ -329,6 +386,11 @@ const WordCard = ({
 				  <Button className={styles.flipButton} onClick={flipWord}>
 				  	Flip
 				  </Button>
+			  </Grid>
+			  <Grid item xs={12} style={{ textAlign: 'center', marginTop: '1rem' }}>
+				  <span style={{ fontSize: '1.5rem', color: '#666' }}>
+					  {cardWords.length > 0 ? `${currentIndex + 1} / ${cardWords.length}` : ''}
+				  </span>
 			  </Grid>
 			</Grid>
 		</Grid>

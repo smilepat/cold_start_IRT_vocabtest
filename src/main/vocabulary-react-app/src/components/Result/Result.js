@@ -3,6 +3,14 @@ import axios from "../../axios/axios"
 import MobileStepper from '@material-ui/core/MobileStepper';
 import {withRouter} from 'react-router-dom';
 import Steps from 'components/Steps/Steps';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import useStyles from './style';
 import styles from './Result.module.css';
@@ -80,13 +88,12 @@ const thetaToVocabCount = (theta) => {
 
 function Result({history, examId, seqNo}) {
 	const [level, setLevel] = useState(0);
-	const [theta, setTheta] = useState(0);
-	const [standardError, setStandardError] = useState(0);
 	const [vocabCount, setVocabCount] = useState(0);
-	const [totalQuestions, setTotalQuestions] = useState(0);
-	const [correctCount, setCorrectCount] = useState(0);
 	const [retryButtonType, setRetryButtonType] = useState('default');
 	const [studyButtonType, setStudyButtonType] = useState('default');
+	const [goalModalOpen, setGoalModalOpen] = useState(false);
+	const [selectedGoalLevel, setSelectedGoalLevel] = useState(1);
+	const [maxLevel, setMaxLevel] = useState(9);
 
 	const level1 = level;
 	const levelStr = `${Math.max(0, vocabCount - 500)} ~ ${vocabCount}개`;
@@ -99,16 +106,8 @@ function Result({history, examId, seqNo}) {
 				const response = await axios.get(`/api/irt/exam/${id}/result`);
 				const result = response.data.data;
 
-				// IRT 결과에서 theta, SE 추출
+				// IRT 결과에서 theta 추출
 				const thetaValue = result.theta || result.finalTheta || 0;
-				const seValue = result.standardError || result.se || 0.5;
-				const questions = result.totalQuestions || result.itemCount || 0;
-				const correct = result.correctCount || 0;
-
-				setTheta(thetaValue);
-				setStandardError(seValue);
-				setTotalQuestions(questions);
-				setCorrectCount(correct);
 
 				// theta를 레벨과 어휘 수로 변환
 				const calculatedLevel = thetaToLevel(thetaValue);
@@ -116,16 +115,43 @@ function Result({history, examId, seqNo}) {
 
 				setLevel(calculatedLevel);
 				setVocabCount(calculatedVocab);
+				setSelectedGoalLevel(Math.min(calculatedLevel + 1, 9));
 
-				console.log('IRT Result:', { theta: thetaValue, se: seValue, level: calculatedLevel, vocab: calculatedVocab });
+				console.log('IRT Result:', { theta: thetaValue, level: calculatedLevel, vocab: calculatedVocab });
 			} catch (error) {
 				if (process.env.NODE_ENV === 'development') {
 					console.error('Result fetch error:', error.response || error);
 				}
 			}
 		};
+
+		const fetchMaxLevel = async () => {
+			try {
+				const response = await axios.get('/api/irt/words/max-level');
+				setMaxLevel(response.data.data || 9);
+			} catch (error) {
+				console.error('Max level fetch error:', error);
+			}
+		};
+
 		fetchResult();
+		fetchMaxLevel();
 	}, [examId, seqNo]);
+
+	const handleStudyClick = () => {
+		setGoalModalOpen(true);
+		setStudyButtonType('clicked');
+	};
+
+	const handleGoalConfirm = () => {
+		setGoalModalOpen(false);
+		history.push(`/wordcard?level=${selectedGoalLevel}`);
+	};
+
+	const handleGoalCancel = () => {
+		setGoalModalOpen(false);
+		setStudyButtonType('default');
+	};
 
 	return (
 		<div className={classes.resultWrapper}>
@@ -291,12 +317,78 @@ function Result({history, examId, seqNo}) {
 								onMouseLeave={() => {
 									setStudyButtonType('default');
 								}}
-								onClick={() => {
-									history.push('/wordcard');
-									setStudyButtonType('clicked');
-								}}
+								onClick={handleStudyClick}
 							/>
 						</div>
+
+						{/* 목표 레벨 선택 모달 */}
+						<Dialog
+							open={goalModalOpen}
+							onClose={handleGoalCancel}
+							maxWidth="sm"
+							fullWidth
+						>
+							<DialogTitle style={{ backgroundColor: '#68c8c7', color: 'white', textAlign: 'center' }}>
+								학습 목표 설정
+							</DialogTitle>
+							<DialogContent style={{ padding: '2rem' }}>
+								<p style={{ fontSize: '1.4rem', marginBottom: '1rem', textAlign: 'center' }}>
+									현재 레벨: <strong>{getLevelText(level1)}</strong> (Level {level1})
+								</p>
+								<p style={{ fontSize: '1.2rem', marginBottom: '2rem', textAlign: 'center', color: '#666' }}>
+									학습할 목표 레벨을 선택하세요
+								</p>
+								<RadioGroup
+									value={selectedGoalLevel.toString()}
+									onChange={(e) => setSelectedGoalLevel(parseInt(e.target.value))}
+									style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+								>
+									{Array.from({ length: maxLevel }, (_, i) => i + 1).map((lvl) => (
+										<FormControlLabel
+											key={lvl}
+											value={lvl.toString()}
+											control={<Radio color="primary" />}
+											label={
+												<span style={{ fontSize: '1.3rem' }}>
+													Level {lvl} - {getLevelText(lvl - 1)}
+													{lvl === level1 + 1 && ' (추천)'}
+												</span>
+											}
+											style={{
+												backgroundColor: lvl === level1 + 1 ? '#e8f5f5' : 'transparent',
+												borderRadius: '8px',
+												padding: '0.5rem',
+												margin: '0'
+											}}
+										/>
+									))}
+								</RadioGroup>
+							</DialogContent>
+							<DialogActions style={{ padding: '1rem 2rem', justifyContent: 'center' }}>
+								<Button
+									onClick={handleGoalCancel}
+									style={{
+										fontSize: '1.2rem',
+										padding: '0.8rem 2rem',
+										color: '#666'
+									}}
+								>
+									취소
+								</Button>
+								<Button
+									onClick={handleGoalConfirm}
+									variant="contained"
+									style={{
+										fontSize: '1.2rem',
+										padding: '0.8rem 2rem',
+										backgroundColor: '#68c8c7',
+										color: 'white'
+									}}
+								>
+									학습 시작
+								</Button>
+							</DialogActions>
+						</Dialog>
 					</div>
 				</div>
 				<div className={classes.resultFooter}></div>
