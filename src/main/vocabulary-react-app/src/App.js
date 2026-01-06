@@ -6,6 +6,7 @@ import Intro from './components/Intro/Intro';
 import Main from './components/Main/Main';
 import Error from './components/Error/Error';
 import Result from './components/Result/Result';
+import WordCard from './components/WordCard/WordCard';
 import axios from "./axios/axios"
 
 function App() {
@@ -65,6 +66,17 @@ function App() {
 						<Route
 							path='/result'
 							render={() => <Result examId={examId} seqNo={examId} />}
+						/>
+						<Route
+							path='/wordcard'
+							render={() => (
+								<WordCard
+									seqNo={examId}
+									open={openQuit}
+									onClickQuit={() => setOpenQuit(true)}
+									handleClose={() => setOpenQuit(false)}
+								/>
+							)}
 						/>
 						<Route path='*' component={Error} />
 					</Switch>
