@@ -36,7 +36,9 @@
       "Bash(set \"JAVA_HOME=C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-11.0.28.6-hotspot\")",
       "Bash(powershell:*)",
       "Bash(cmd.exe /c \"cd /d c:\\\\project\\\\cold_start_IRT_vocabtest && set JAVA_HOME=C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-11.0.28.6-hotspot && mvnw.cmd spring-boot:run\")",
-      "Bash(node fix-sql.js:*)"
+      "Bash(node fix-sql.js:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill //F //PID 23232)"
     ]
   }
 }
