@@ -1,0 +1,524 @@
+/* ===== Container ===== */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ===== Setup Panel ===== */
+.setupPanel {
+  background: white;
+  border-radius: 24px;
+  padding: 48px 40px;
+  max-width: 720px;
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.setupTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.setupDesc {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.typeBtn {
+  padding: 16px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: white;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.typeBtn:hover {
+  border-color: #667eea;
+  color: #667eea;
+  background: #f5f3ff;
+}
+
+.typeBtnAll {
+  grid-column: span 2;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.typeBtnAll:hover {
+  opacity: 0.9;
+  color: white;
+  background: linear-gradient(135deg, #5a6fd6, #6a4093);
+}
+
+/* ===== Main Panel ===== */
+.mainPanel {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 720px;
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Progress ===== */
+.progressSection {
+  margin-bottom: 24px;
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progressLabel {
+  font-size: 14px;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.progressCount {
+  font-size: 14px;
+  color: #999;
+  font-weight: 500;
+}
+
+.progressBar {
+  height: 6px;
+  background: #e8e8e8;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* ===== Question Card ===== */
+.questionCard {
+  padding: 8px 0;
+}
+
+.wordBadge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.wordText {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+.posBadge {
+  background: #f0edff;
+  color: #667eea;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.questionText {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #444;
+  background: #f8f9fa;
+  padding: 20px 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  white-space: pre-wrap;
+}
+
+/* ===== Choices ===== */
+.choicesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.choiceBtn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-size: 16px;
+}
+
+.choiceBtn:hover:not(:disabled) {
+  border-color: #667eea;
+  background: #fafafe;
+}
+
+.choiceBtnSelected {
+  border-color: #667eea;
+  background: #f0edff;
+}
+
+.choiceBtnCorrect {
+  border-color: #4caf50;
+  background: #e8f5e9;
+}
+
+.choiceBtnWrong {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+.choiceLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.choiceBtnSelected .choiceLabel {
+  background: #667eea;
+  color: white;
+}
+
+.choiceBtnCorrect .choiceLabel {
+  background: #4caf50;
+  color: white;
+}
+
+.choiceBtnWrong .choiceLabel {
+  background: #f44336;
+  color: white;
+}
+
+.choiceText {
+  flex: 1;
+  color: #333;
+}
+
+/* ===== Submit Button ===== */
+.submitBtn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: #ccc;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: not-allowed;
+  transition: all 0.2s;
+}
+
+.submitBtnActive {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  cursor: pointer;
+}
+
+.submitBtnActive:hover {
+  opacity: 0.9;
+}
+
+/* ===== Feedback ===== */
+.feedback {
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.feedbackCorrect {
+  background: #e8f5e9;
+  border: 2px solid #4caf50;
+}
+
+.feedbackWrong {
+  background: #ffebee;
+  border: 2px solid #f44336;
+}
+
+.feedbackIcon {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.feedbackCorrect .feedbackIcon { color: #4caf50; }
+.feedbackWrong .feedbackIcon { color: #f44336; }
+
+.feedbackDetail {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.feedbackMeaning {
+  font-size: 14px;
+  color: #666;
+}
+
+/* ===== Score Section ===== */
+.scoreSection {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #999;
+}
+
+/* ===== Result Panel ===== */
+.resultPanel {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 720px;
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.resultTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.scoreCircle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 6px solid #667eea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.scorePercent {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.scoreDetail {
+  font-size: 16px;
+  color: #999;
+}
+
+.gradeText {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+/* ===== Type Breakdown ===== */
+.typeBreakdown {
+  text-align: left;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.typeBreakdown h3 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.typeRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.typeName {
+  font-size: 14px;
+  color: #555;
+}
+
+.typeStat {
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+/* ===== Wrong Section ===== */
+.wrongSection {
+  text-align: left;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #fff8f8;
+  border-radius: 12px;
+  border: 1px solid #ffcdd2;
+}
+
+.wrongSection h3 {
+  font-size: 16px;
+  color: #d32f2f;
+  margin-bottom: 12px;
+}
+
+.wrongItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ffebee;
+}
+
+.wrongItem strong {
+  font-size: 16px;
+  color: #333;
+}
+
+.wrongMeaning {
+  font-size: 14px;
+  color: #666;
+}
+
+.wrongExample {
+  font-size: 13px;
+  color: #999;
+  font-style: italic;
+}
+
+/* ===== Action Buttons ===== */
+.resultActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.retryBtn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.retryBtn:hover { opacity: 0.9; }
+
+.typeSelectBtn {
+  padding: 14px 28px;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.typeSelectBtn:hover {
+  background: #f0edff;
+}
+
+.backBtn {
+  padding: 14px 28px;
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.backBtn:hover { background: #eee; }
+
+/* ===== Loading ===== */
+.loadingPanel {
+  background: white;
+  border-radius: 24px;
+  padding: 60px;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e8e8e8;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorPanel {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.errorPanel p {
+  color: #f44336;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.errorPanel button {
+  padding: 12px 24px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}

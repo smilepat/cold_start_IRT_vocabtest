@@ -216,7 +216,7 @@ function Result({history, examId, seqNo}) {
 
 	const handleGoalConfirm = () => {
 		setGoalModalOpen(false);
-		history.push(`/wordcard?level=${selectedGoalLevel}`);
+		history.push(`/learning?level=${selectedGoalLevel}`);
 	};
 
 	const handleGoalCancel = () => {
@@ -669,7 +669,7 @@ function Result({history, examId, seqNo}) {
 													}}
 													onClick={() => {
 														setStudyPlanModalOpen(false);
-														history.push(`/wordcard?level=${plan.level}`);
+														history.push(`/learning?level=${plan.level}`);
 													}}
 												>
 													이 레벨 학습하기
@@ -711,7 +711,7 @@ function Result({history, examId, seqNo}) {
 								<Button
 									onClick={() => {
 										setStudyPlanModalOpen(false);
-										history.push(`/wordcard?level=${level1 + 1}`);
+										history.push(`/learning?level=${level1 + 1}`);
 									}}
 									variant="contained"
 									style={{

@@ -79,6 +79,12 @@ function Intro({history}) {
 									setStartButtonType('clicked');
 								}}
 							/>
+							<button
+								className={classes.clozeBtn}
+								onClick={() => history.push('/cloze')}
+							>
+								Cloze Learning
+							</button>
 						</Grid>
 					</Grid>
 					<Grid className={classes.introBodyWhite}></Grid>
@@ -128,6 +134,12 @@ function Intro({history}) {
 									setStartButtonType('clicked');
 								}}
 							/>
+							<button
+								className={classes.clozeBtnMobile}
+								onClick={() => history.push('/cloze')}
+							>
+								Cloze Learning
+							</button>
 						</Grid>
 					</Grid>
 					<Grid className={classes.introBodyWhite}></Grid>

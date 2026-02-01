@@ -95,6 +95,57 @@ CREATE TABLE IF NOT EXISTS calibration_history (
     FOREIGN KEY (word_seqno) REFERENCES word(word_seqno) ON DELETE CASCADE
 );
 
+-- =============================================================================
+-- Cloze Learning Tables
+-- =============================================================================
+
+-- Table: cloze_theme (주제별 학습 카테고리)
+CREATE TABLE IF NOT EXISTS cloze_theme (
+    theme_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    theme_name VARCHAR(100) NOT NULL,
+    theme_name_ko VARCHAR(100),
+    description VARCHAR(500),
+    difficulty_level INT DEFAULT 1,
+    category VARCHAR(50),
+    thumbnail_url VARCHAR(255),
+    display_order INT DEFAULT 0,
+    active_yn VARCHAR(1) DEFAULT 'Y',
+    create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: cloze_passage (지문)
+CREATE TABLE IF NOT EXISTS cloze_passage (
+    passage_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    theme_id BIGINT NOT NULL,
+    title VARCHAR(200),
+    content TEXT,
+    content_ko TEXT,
+    passage_order INT DEFAULT 0,
+    active_yn VARCHAR(1) DEFAULT 'Y',
+    create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (theme_id) REFERENCES cloze_theme(theme_id) ON DELETE CASCADE
+);
+
+-- Table: cloze_blank (빈칸)
+CREATE TABLE IF NOT EXISTS cloze_blank (
+    blank_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    passage_id BIGINT NOT NULL,
+    blank_number INT,
+    answer VARCHAR(100) NOT NULL,
+    answer_ko VARCHAR(100),
+    hint VARCHAR(200),
+    option1 VARCHAR(100),
+    option2 VARCHAR(100),
+    option3 VARCHAR(100),
+    word_class VARCHAR(50),
+    active_yn VARCHAR(1) DEFAULT 'Y',
+    create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (passage_id) REFERENCES cloze_passage(passage_id) ON DELETE CASCADE
+);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_word_level ON word(level, detail_section);
 CREATE INDEX IF NOT EXISTS idx_word_active ON word(active_yn);
@@ -103,3 +154,7 @@ CREATE INDEX IF NOT EXISTS idx_exam_done ON word_exam(exam_done_yn);
 CREATE INDEX IF NOT EXISTS idx_exam_detail_exam ON word_exam_detail(word_exam_seqno);
 CREATE INDEX IF NOT EXISTS idx_wrl_word_seqno ON word_response_log(word_seqno);
 CREATE INDEX IF NOT EXISTS idx_ch_word_seqno ON calibration_history(word_seqno);
+CREATE INDEX IF NOT EXISTS idx_cloze_theme_active ON cloze_theme(active_yn);
+CREATE INDEX IF NOT EXISTS idx_cloze_theme_category ON cloze_theme(category);
+CREATE INDEX IF NOT EXISTS idx_cloze_passage_theme ON cloze_passage(theme_id);
+CREATE INDEX IF NOT EXISTS idx_cloze_blank_passage ON cloze_blank(passage_id);
